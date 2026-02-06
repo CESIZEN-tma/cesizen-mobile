@@ -9,13 +9,7 @@ type NavItem = {
   route: string;
 };
 
-const navItems: NavItem[] = [
-  { icon: "home", route: "/" },
-  { icon: "search", route: "/search" },
-  { icon: "add-circle", route: "/create" },
-  { icon: "heart", route: "/favorites" },
-  { icon: "person", route: "/profile" },
-];
+const navItems: NavItem[] = [{ icon: "home", route: "/" }];
 
 const Footer = () => {
   const { colors } = useTheme();
@@ -35,7 +29,7 @@ const Footer = () => {
             <Ionicons
               name={item.icon}
               size={28}
-              color={isActive ? colors.primary : colors.text}
+              color={isActive ? colors.secondary : colors.text}
             />
           </TouchableOpacity>
         );

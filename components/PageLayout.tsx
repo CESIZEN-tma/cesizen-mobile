@@ -1,8 +1,8 @@
 import { useTheme } from "@/hooks/themeHooks";
 import React, { ReactNode } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import Footer from "./layout/footer";
-import Header from "./layout/header";
+import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import Footer from "./layout/Footer";
+import Header from "./layout/Header";
 
 type PageLayoutProps = {
   children: ReactNode;
@@ -22,7 +22,9 @@ const PageLayout = ({
   const Content = scrollable ? ScrollView : View;
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       {header && <Header onMenuPress={() => console.log("Menu")} />}
 
       <Content
@@ -33,7 +35,7 @@ const PageLayout = ({
       </Content>
 
       {footer && <Footer />}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -45,7 +47,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 80,
+    flexGrow: 1,
+    paddingBottom: 20,
   },
 });
 
