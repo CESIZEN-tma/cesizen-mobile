@@ -4,7 +4,7 @@ import { ExternalLink } from "./ExternalLink";
 import { Text, View } from "./Themed";
 
 import Colors from "@/constants/Colors";
-import PressableButton from "./shared/PressableButton";
+import PressableButton from "./shared/PressButton";
 
 export default function EditScreenInfo({ path }: { path: string }) {
   return (

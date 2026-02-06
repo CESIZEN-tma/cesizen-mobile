@@ -1,4 +1,4 @@
-import PressableButton from "@/components/shared/PressableButton";
+import PressButton from "@/components/shared/PressButton";
 import { useTheme } from "@/hooks/themeHooks";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.title, { color: colors.text }]}>Home</Text>
-      <PressableButton label="Go to details" />
+      <PressButton label="Go to details" />
     </View>
   );
 }
