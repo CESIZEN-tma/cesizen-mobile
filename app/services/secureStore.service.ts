@@ -1,0 +1,103 @@
+import * as SecureStore from 'expo-secure-store';
+
+class SecureStoreService {
+  // Save a value
+  async setItem(key: string, value: string): Promise<void> {
+    try {
+      await SecureStore.setItemAsync(key, value);
+    } catch (error) {
+      console.error(`Error saving ${key}:`, error);
+      throw error;
+    }
+  }
+
+  // Retrieve a value
+  async getItem(key: string): Promise<string | null> {
+    try {
+      const value = await SecureStore.getItemAsync(key);
+      return value;
+    } catch (error) {
+      console.error(`Error retrieving ${key}:`, error);
+      return null;
+    }
+  }
+
+  // Delete a value
+  async removeItem(key: string): Promise<void> {
+    try {
+      await SecureStore.deleteItemAsync(key);
+    } catch (error) {
+      console.error(`Error deleting ${key}:`, error);
+      throw error;
+    }
+  }
+
+  // Save a JSON object
+  async setObject(key: string, value: object): Promise<void> {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await this.setItem(key, jsonValue);
+    } catch (error) {
+      console.error(`Error saving object ${key}:`, error);
+      throw error;
+    }
+  }
+
+  // Retrieve a JSON object
+  async getObject<T>(key: string): Promise<T | null> {
+    try {
+      const jsonValue = await this.getItem(key);
+      return jsonValue ? JSON.parse(jsonValue) : null;
+    } catch (error) {
+      console.error(`Error retrieving object ${key}:`, error);
+      return null;
+    }
+  }
+
+  // Check if a key exists
+  async hasItem(key: string): Promise<boolean> {
+    try {
+      const value = await this.getItem(key);
+      return value !== null;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  // Specific functions for authentication
+  async saveToken(token: string): Promise<void> {
+    await this.setItem('authToken', token);
+  }
+
+  async getToken(): Promise<string | null> {
+    return await this.getItem('authToken');
+  }
+
+  async removeToken(): Promise<void> {
+    await this.removeItem('authToken');
+  }
+
+  async saveUser(user: object): Promise<void> {
+    await this.setObject('user', user);
+  }
+
+  async getUser<T>(): Promise<T | null> {
+    return await this.getObject<T>('user');
+  }
+
+  async removeUser(): Promise<void> {
+    await this.removeItem('user');
+  }
+
+  // Clear all data (logout)
+  async clearAll(keys: string[]): Promise<void> {
+    try {
+      await Promise.all(keys.map(key => this.removeItem(key)));
+    } catch (error) {
+      console.error('Error during cleanup:', error);
+      throw error;
+    }
+  }
+}
+
+export default new SecureStoreService();
