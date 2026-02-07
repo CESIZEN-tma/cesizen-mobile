@@ -5,6 +5,7 @@ import { Animated, StyleSheet, Text, TouchableOpacity } from "react-native";
 type PressableButtonProps = {
   width?: number;
   height?: number;
+  secondary?: boolean;
   label: string;
   onPress?: () => void;
 };
@@ -12,6 +13,7 @@ type PressableButtonProps = {
 export default function PressButton({
   width = 200,
   height = 40,
+  secondary = false,
   label,
   onPress,
 }: PressableButtonProps) {
@@ -47,7 +49,7 @@ export default function PressButton({
           width,
           height,
           borderRadius,
-          backgroundColor: colors.shadowSecondary,
+          backgroundColor: secondary ? colors.gray600 : colors.shadowSecondary,
         },
       ]}
     >
@@ -57,11 +59,15 @@ export default function PressButton({
           {
             transform: [{ translateY }],
             borderRadius,
-            backgroundColor: colors.secondary,
+            backgroundColor: secondary ? colors.gray400 : colors.secondary,
           },
         ]}
       >
-        <Text style={styles.text}>{label}</Text>
+        <Text
+          style={[styles.text, { color: secondary ? colors.gray50 : "#fff" }]}
+        >
+          {label}
+        </Text>
       </Animated.View>
     </TouchableOpacity>
   );
@@ -77,7 +83,6 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    color: "#fff",
     fontWeight: "600",
   },
 });

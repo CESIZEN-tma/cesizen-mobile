@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Home</Text>
+      <Text>Home</Text>
     </View>
   );
 }
@@ -26,5 +26,31 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
+  },
+
+  buttonsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 16,
+    marginTop: 30,
+  },
+
+  slide: {
+    height: 500,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  slideText: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#fff",
+  },
+  image: {
+    width: "100%",
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 10,
   },
 });
