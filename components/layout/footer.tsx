@@ -9,7 +9,10 @@ type NavItem = {
   route: string;
 };
 
-const navItems: NavItem[] = [{ icon: "home", route: "/" }];
+const navItems: NavItem[] = [
+  { icon: "home", route: "/" },
+  { icon: "flask-outline", route: "/firstOpenedPage" },
+];
 
 const Footer = () => {
   const { colors } = useTheme();

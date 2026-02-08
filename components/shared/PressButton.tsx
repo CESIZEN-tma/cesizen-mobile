@@ -63,11 +63,7 @@ export default function PressButton({
           },
         ]}
       >
-        <Text
-          style={[styles.text, { color: secondary ? colors.gray50 : "#fff" }]}
-        >
-          {label}
-        </Text>
+        <Text style={[styles.text, { color: "#fff" }]}>{label}</Text>
       </Animated.View>
     </TouchableOpacity>
   );

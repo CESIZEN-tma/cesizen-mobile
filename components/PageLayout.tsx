@@ -26,7 +26,7 @@ const PageLayout = ({
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      {header && <Header onMenuPress={() => console.log("Menu")} />}
+      {header && <Header />}
 
       <Content
         style={styles.content}
