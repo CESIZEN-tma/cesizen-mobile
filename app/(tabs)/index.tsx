@@ -7,7 +7,9 @@ export default function Home() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Home</Text>
+      <Text style={[styles.title, { color: colors.text }]}>
+        Welcome to CesiZen
+      </Text>
     </View>
   );
 }
@@ -19,12 +21,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
 });
