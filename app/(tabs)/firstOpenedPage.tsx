@@ -1,11 +1,13 @@
 import Carousel from "@/components/shared/Carousel";
 import PressButton from "@/components/shared/PressButton";
 import { useTheme } from "@/hooks/themeHooks";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 const firstOpenedPage = () => {
   const { colors } = useTheme();
+  const router = useRouter();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -42,8 +44,15 @@ const firstOpenedPage = () => {
         </View>
       </Carousel>
       <View style={styles.buttonsContainer}>
-        <PressButton label="Continuer en tant qu'invité" secondary />
-        <PressButton label="Créer un compte" />
+        <PressButton
+          label="Continuer en tant qu'invité"
+          secondary
+          onPress={() => router.push("/(tabs)")}
+        />
+        <PressButton
+          label="Créer un compte"
+          onPress={() => router.push("/(auth)/register")}
+        />
       </View>
     </View>
   );
