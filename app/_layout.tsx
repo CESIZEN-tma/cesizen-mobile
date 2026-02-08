@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/themeHooks";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
@@ -36,10 +37,12 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="(auth)" />
-      </Stack>
+      <AuthProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(auth)" />
+        </Stack>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

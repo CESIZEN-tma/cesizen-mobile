@@ -89,6 +89,23 @@ class SecureStoreService {
     await this.removeItem('user');
   }
 
+  async saveRefreshToken(token: string): Promise<void> {
+    await this.setItem('refreshToken', token);
+  }
+
+  async getRefreshToken(): Promise<string | null> {
+    return await this.getItem('refreshToken');
+  }
+
+  async removeRefreshToken(): Promise<void> {
+    await this.removeItem('refreshToken');
+  }
+
+  async isAuthenticated(): Promise<boolean> {
+    const refreshToken = await this.getRefreshToken();
+    return refreshToken !== null;
+  }
+
   // Clear all data (logout)
   async clearAll(keys: string[]): Promise<void> {
     try {
@@ -97,6 +114,10 @@ class SecureStoreService {
       console.error('Error during cleanup:', error);
       throw error;
     }
+  }
+
+  async logout(): Promise<void> {
+    await this.clearAll(['authToken', 'refreshToken', 'user']);
   }
 }
 
