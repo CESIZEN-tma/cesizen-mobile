@@ -3,23 +3,31 @@ import { Ionicons } from "@expo/vector-icons";
 import { usePathname, useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type NavItem = {
   icon: keyof typeof Ionicons.glyphMap;
   route: string;
 };
 
-const navItems: NavItem[] = [
-  { icon: "home", route: "/" },
-];
+const navItems: NavItem[] = [{ icon: "home", route: "/" }];
 
 const Footer = () => {
   const { colors } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.surface,
+          paddingBottom: insets.bottom + 10,
+        },
+      ]}
+    >
       {navItems.map((item, index) => {
         const isActive = pathname === item.route;
         return (
@@ -46,12 +54,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 70,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
     paddingHorizontal: 16,
-    paddingBottom: 10,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: "rgba(0, 0, 0, 0.1)",
   },
