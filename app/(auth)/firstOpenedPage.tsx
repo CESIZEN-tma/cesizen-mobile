@@ -1,6 +1,7 @@
 import Carousel from "@/components/shared/Carousel";
 import PressButton from "@/components/shared/PressButton";
 import { useTheme } from "@/hooks/themeHooks";
+import { useFirstLaunch } from "@/hooks/useFirstLaunch";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -8,6 +9,22 @@ import { Image, StyleSheet, Text, View } from "react-native";
 const firstOpenedPage = () => {
   const { colors } = useTheme();
   const router = useRouter();
+  const { markAsLaunched } = useFirstLaunch();
+
+  const handleContinueAsGuest = async () => {
+    await markAsLaunched();
+    router.replace("/(tabs)");
+  };
+
+  const handleCreateAccount = async () => {
+    await markAsLaunched();
+    router.push("/(auth)/register");
+  };
+
+  const handleLogin = async () => {
+    await markAsLaunched();
+    router.push("/(auth)/login");
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -47,12 +64,9 @@ const firstOpenedPage = () => {
         <PressButton
           label="Continuer en tant qu'invité"
           secondary
-          onPress={() => router.push("/(tabs)")}
+          onPress={handleContinueAsGuest}
         />
-        <PressButton
-          label="Créer un compte"
-          onPress={() => router.push("/(auth)/register")}
-        />
+        <PressButton label="Créer un compte" onPress={handleCreateAccount} />
       </View>
     </View>
   );

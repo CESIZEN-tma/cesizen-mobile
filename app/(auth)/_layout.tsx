@@ -1,17 +1,33 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Stack, useRouter } from "expo-router";
+import { useFirstLaunch } from "@/hooks/useFirstLaunch";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
 
 export default function AuthLayout() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isFirstLaunch, isLoading: firstLaunchLoading } = useFirstLaunch();
   const router = useRouter();
+  const segments = useSegments();
+
+  const isLoading = authLoading || firstLaunchLoading;
 
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    if (isLoading) return;
+
+    const inFirstOpenedPage = segments[segments.length - 1] === "firstOpenedPage";
+
+    // If first launch, show firstOpenedPage
+    if (isFirstLaunch && !inFirstOpenedPage) {
+      router.replace("/(auth)/firstOpenedPage");
+      return;
+    }
+
+    // If not first launch and authenticated, redirect to main app
+    if (!isFirstLaunch && isAuthenticated && !inFirstOpenedPage) {
       router.replace("/(tabs)");
     }
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, isFirstLaunch, isLoading, segments]);
 
   if (isLoading) {
     return (
@@ -21,12 +37,9 @@ export default function AuthLayout() {
     );
   }
 
-  if (isAuthenticated) {
-    return null;
-  }
-
   return (
     <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="firstOpenedPage" />
       <Stack.Screen name="login" />
       <Stack.Screen name="register" />
       <Stack.Screen name="forgot-password" />

@@ -11,7 +11,6 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { icon: "home", route: "/" },
-  { icon: "flask-outline", route: "/firstOpenedPage" },
 ];
 
 const Footer = () => {
