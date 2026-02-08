@@ -1,41 +1,23 @@
 import { useAuth } from "@/hooks/useAuth";
-import { useFirstLaunch } from "@/hooks/useFirstLaunch";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
-import { ActivityIndicator, View, StyleSheet } from "react-native";
 
 export default function AuthLayout() {
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { isFirstLaunch, isLoading: firstLaunchLoading } = useFirstLaunch();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const segments = useSegments();
-
-  const isLoading = authLoading || firstLaunchLoading;
 
   useEffect(() => {
     if (isLoading) return;
 
+    const inAuthFlow = segments.includes("(auth)");
     const inFirstOpenedPage = segments[segments.length - 1] === "firstOpenedPage";
 
-    // If first launch, show firstOpenedPage
-    if (isFirstLaunch && !inFirstOpenedPage) {
-      router.replace("/(auth)/firstOpenedPage");
-      return;
-    }
-
-    // If not first launch and authenticated, redirect to main app
-    if (!isFirstLaunch && isAuthenticated && !inFirstOpenedPage) {
+    // If authenticated and trying to access login/register (not firstOpenedPage), redirect to main app
+    if (isAuthenticated && inAuthFlow && !inFirstOpenedPage) {
       router.replace("/(tabs)");
     }
-  }, [isAuthenticated, isFirstLaunch, isLoading, segments]);
-
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  }, [isAuthenticated, isLoading, segments]);
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -46,11 +28,3 @@ export default function AuthLayout() {
     </Stack>
   );
 }
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

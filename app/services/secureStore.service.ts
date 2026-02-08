@@ -6,7 +6,6 @@ class SecureStoreService {
     try {
       await SecureStore.setItemAsync(key, value);
     } catch (error) {
-      console.error(`Error saving ${key}:`, error);
       throw error;
     }
   }
@@ -17,7 +16,6 @@ class SecureStoreService {
       const value = await SecureStore.getItemAsync(key);
       return value;
     } catch (error) {
-      console.error(`Error retrieving ${key}:`, error);
       return null;
     }
   }
@@ -27,7 +25,6 @@ class SecureStoreService {
     try {
       await SecureStore.deleteItemAsync(key);
     } catch (error) {
-      console.error(`Error deleting ${key}:`, error);
       throw error;
     }
   }
@@ -38,7 +35,6 @@ class SecureStoreService {
       const jsonValue = JSON.stringify(value);
       await this.setItem(key, jsonValue);
     } catch (error) {
-      console.error(`Error saving object ${key}:`, error);
       throw error;
     }
   }
@@ -49,7 +45,6 @@ class SecureStoreService {
       const jsonValue = await this.getItem(key);
       return jsonValue ? JSON.parse(jsonValue) : null;
     } catch (error) {
-      console.error(`Error retrieving object ${key}:`, error);
       return null;
     }
   }
@@ -111,7 +106,6 @@ class SecureStoreService {
     try {
       await Promise.all(keys.map(key => this.removeItem(key)));
     } catch (error) {
-      console.error('Error during cleanup:', error);
       throw error;
     }
   }

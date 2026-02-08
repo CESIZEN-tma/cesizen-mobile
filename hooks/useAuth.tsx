@@ -45,7 +45,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(userData);
       }
     } catch (error) {
-      console.error("Error checking auth status:", error);
       setIsAuthenticated(false);
       setUser(null);
     } finally {
@@ -60,7 +59,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       // TODO: Replace with actual API call
-      console.log("Login attempt:", { email, password });
 
       // Simulate API response
       const mockRefreshToken = "mock-refresh-token-" + Date.now();
@@ -78,7 +76,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(true);
       setUser(mockUser);
     } catch (error) {
-      console.error("Login error:", error);
       throw error;
     }
   };
@@ -91,7 +88,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }) => {
     try {
       // TODO: Replace with actual API call
-      console.log("Register attempt:", userData);
 
       // Simulate API response
       const mockRefreshToken = "mock-refresh-token-" + Date.now();
@@ -109,7 +105,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(true);
       setUser(mockUser);
     } catch (error) {
-      console.error("Register error:", error);
       throw error;
     }
   };
@@ -120,7 +115,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(false);
       setUser(null);
     } catch (error) {
-      console.error("Logout error:", error);
       throw error;
     }
   };

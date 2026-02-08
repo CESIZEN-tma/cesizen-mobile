@@ -14,10 +14,10 @@ export function useFirstLaunch() {
   const checkFirstLaunch = async () => {
     try {
       const hasLaunched = await AsyncStorage.getItem(FIRST_LAUNCH_KEY);
-      setIsFirstLaunch(hasLaunched === null);
+      const isFirst = hasLaunched === null;
+      setIsFirstLaunch(isFirst);
       setIsLoading(false);
     } catch (error) {
-      console.error("Error checking first launch:", error);
       setIsFirstLaunch(false);
       setIsLoading(false);
     }
@@ -25,10 +25,10 @@ export function useFirstLaunch() {
 
   const markAsLaunched = async () => {
     try {
-      await AsyncStorage.setItem(FIRST_LAUNCH_KEY, "false");
+      await AsyncStorage.setItem(FIRST_LAUNCH_KEY, "true");
       setIsFirstLaunch(false);
     } catch (error) {
-      console.error("Error marking app as launched:", error);
+      // Silently fail
     }
   };
 
