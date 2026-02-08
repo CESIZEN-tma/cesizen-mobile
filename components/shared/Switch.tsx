@@ -11,6 +11,8 @@ type SwitchProps = {
   colorOff?: string;
   iconOn?: keyof typeof Ionicons.glyphMap;
   iconOff?: keyof typeof Ionicons.glyphMap;
+  iconColorOn?: string;
+  iconColorOff?: string;
   width?: number;
   height?: number;
 };
@@ -23,6 +25,8 @@ const Switch = ({
   colorOff,
   iconOn = "checkmark",
   iconOff = "close",
+  iconColorOn,
+  iconColorOff,
   width = 60,
   height = 32,
 }: SwitchProps) => {
@@ -31,6 +35,8 @@ const Switch = ({
 
   const activeColorOn = colorOn || colors.primary;
   const activeColorOff = colorOff || colors.border;
+  const activeIconColorOn = iconColorOn || colors.primary;
+  const activeIconColorOff = iconColorOff || colors.border;
 
   useEffect(() => {
     Animated.spring(translateX, {
@@ -80,7 +86,7 @@ const Switch = ({
         <Ionicons
           name={isOn ? iconOn : iconOff}
           size={height - 12}
-          color={isOn ? activeColorOn : activeColorOff}
+          color={isOn ? activeIconColorOn : activeIconColorOff}
         />
       </Animated.View>
     </TouchableOpacity>
