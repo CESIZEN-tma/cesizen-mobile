@@ -30,6 +30,8 @@ const Login = () => {
     password: "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const validateForm = () => {
     const newErrors = {
       email: "",
@@ -54,15 +56,35 @@ const Login = () => {
 
   const handleLogin = async () => {
     if (validateForm()) {
+      setIsLoading(true);
       try {
         await login(formData.email, formData.password);
         router.replace("/(tabs)");
-      } catch (error) {
+      } catch (error: any) {
         console.error("Login failed:", error);
+
+        let errorMessage = "Échec de la connexion. Veuillez réessayer.";
+
+        if (error?.message) {
+          if (error.message.toLowerCase().includes("not activated") ||
+              error.message.toLowerCase().includes("non activé")) {
+            errorMessage = "Compte non activé. Veuillez vérifier votre email.";
+          } else if (error.message.toLowerCase().includes("locked") ||
+                     error.message.toLowerCase().includes("verrouillé")) {
+            errorMessage = "Compte verrouillé. Contactez le support.";
+          } else if (error.message.toLowerCase().includes("credentials") ||
+                     error.message.toLowerCase().includes("email") ||
+                     error.message.toLowerCase().includes("password")) {
+            errorMessage = "Email ou mot de passe incorrect.";
+          }
+        }
+
         setErrors({
           ...errors,
-          password: "Échec de la connexion. Veuillez réessayer.",
+          password: errorMessage,
         });
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -129,8 +151,8 @@ const Login = () => {
 
           <View style={styles.buttonContainer}>
             <PressButton
-              label="Se connecter"
-              onPress={handleLogin}
+              label={isLoading ? "Connexion..." : "Se connecter"}
+              onPress={isLoading ? () => {} : handleLogin}
               width={300}
               height={50}
             />
