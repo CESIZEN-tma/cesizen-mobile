@@ -1,4 +1,6 @@
 import secureStoreService from "@/app/services/secureStore.service";
+import { authApi } from "@/app/services/api/authApi";
+import { userApi } from "@/app/services/api/userApi";
 import React, {
   createContext,
   useContext,
@@ -58,23 +60,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      // TODO: Replace with actual API call
-
-      // Simulate API response
-      const mockRefreshToken = "mock-refresh-token-" + Date.now();
-      const mockAuthToken = "mock-auth-token-" + Date.now();
-      const mockUser = {
+      const { accessToken, refreshToken } = await authApi.login(
         email,
-        firstName: "User",
-        lastName: "Test",
+        password
+      );
+
+      await secureStoreService.saveToken(accessToken);
+      await secureStoreService.saveRefreshToken(refreshToken);
+
+      const userProfile = await userApi.getProfile();
+
+      const userData = {
+        email: userProfile.email,
+        firstName: userProfile.firstName,
+        lastName: userProfile.lastName,
       };
 
-      await secureStoreService.saveRefreshToken(mockRefreshToken);
-      await secureStoreService.saveToken(mockAuthToken);
-      await secureStoreService.saveUser(mockUser);
+      await secureStoreService.saveUser(userData);
 
       setIsAuthenticated(true);
-      setUser(mockUser);
+      setUser(userData);
     } catch (error) {
       throw error;
     }
@@ -87,23 +92,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     lastName: string;
   }) => {
     try {
-      // TODO: Replace with actual API call
-
-      // Simulate API response
-      const mockRefreshToken = "mock-refresh-token-" + Date.now();
-      const mockAuthToken = "mock-auth-token-" + Date.now();
-      const mockUser = {
+      await authApi.register({
         email: userData.email,
+        password: userData.password,
+        confirmPassword: userData.password,
         firstName: userData.firstName,
         lastName: userData.lastName,
-      };
-
-      await secureStoreService.saveRefreshToken(mockRefreshToken);
-      await secureStoreService.saveToken(mockAuthToken);
-      await secureStoreService.saveUser(mockUser);
-
-      setIsAuthenticated(true);
-      setUser(mockUser);
+      });
     } catch (error) {
       throw error;
     }
@@ -111,10 +106,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
+      await authApi.logout();
       await secureStoreService.logout();
       setIsAuthenticated(false);
       setUser(null);
     } catch (error) {
+      await secureStoreService.logout();
+      setIsAuthenticated(false);
+      setUser(null);
       throw error;
     }
   };
