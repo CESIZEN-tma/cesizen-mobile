@@ -7,7 +7,9 @@ export const themes: ColorPalette = {
     background: "#ffffff",
     surface: "#f7f7f7",
     text: "#3c3c3c",
+    textSecondary: "#737373",
     border: "#e5e5e5",
+    error: "#ef4444",
     shadowPrimary: "#45a001",
     shadowSecondary: "#1690c7",
 
@@ -30,7 +32,9 @@ export const themes: ColorPalette = {
     background: "#1c1c1c",
     surface: "#2a2a2a",
     text: "#ffffff",
+    textSecondary: "#a3a3a3",
     border: "#3a3a3a",
+    error: "#ef4444",
     shadowPrimary: "#45a001",
     shadowSecondary: "#1690c7",
 

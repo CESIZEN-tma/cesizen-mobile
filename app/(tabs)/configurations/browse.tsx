@@ -248,19 +248,16 @@ export default function BrowseConfigurationsScreen() {
                 ]}
                 onPress={() => setSelectedDifficulty(difficulty)}
               >
-                <Text
-                  style={[
-                    styles.filterChipText,
-                    {
-                      color:
-                        selectedDifficulty === difficulty
-                          ? '#ffffff'
-                          : colors.text,
-                    },
-                  ]}
-                >
-                  {'⭐'.repeat(difficulty)}
-                </Text>
+                <View style={styles.filterStarsContainer}>
+                  {Array.from({ length: difficulty }).map((_, i) => (
+                    <Ionicons
+                      key={i}
+                      name="star"
+                      size={14}
+                      color={selectedDifficulty === difficulty ? '#ffffff' : colors.primary}
+                    />
+                  ))}
+                </View>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -316,6 +313,10 @@ const styles = StyleSheet.create({
   filterChipText: {
     fontSize: 14,
     fontWeight: '600',
+  },
+  filterStarsContainer: {
+    flexDirection: 'row',
+    gap: 2,
   },
   centerContainer: {
     flex: 1,

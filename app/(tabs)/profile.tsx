@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import PageLayout from '@/components/PageLayout';
+import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
 import { useAuth } from '@/hooks/useAuth';
 import { Ionicons } from '@expo/vector-icons';
@@ -53,11 +54,12 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <PageLayout header footer>
-      <ScrollView
-        style={[styles.container, { backgroundColor: colors.background }]}
-        contentContainerStyle={styles.contentContainer}
-      >
+    <AuthGuard requireAuth={true}>
+      <PageLayout header footer>
+        <ScrollView
+          style={[styles.container, { backgroundColor: colors.background }]}
+          contentContainerStyle={styles.contentContainer}
+        >
         <View style={styles.headerSection}>
           <View
             style={[styles.avatarContainer, { backgroundColor: colors.surface }]}
@@ -122,7 +124,8 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </PageLayout>
+      </PageLayout>
+    </AuthGuard>
   );
 }
 

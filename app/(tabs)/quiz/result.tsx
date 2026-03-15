@@ -83,7 +83,20 @@ export default function QuizResultScreen() {
     );
   }
 
-  const difficultyStars = "⭐".repeat(Math.min(configuration.difficulty, 5));
+  const renderDifficulty = () => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(
+        <Ionicons
+          key={i}
+          name={i < configuration.difficulty ? 'star' : 'star-outline'}
+          size={16}
+          color={colors.primary}
+        />
+      );
+    }
+    return <View style={styles.starsContainer}>{stars}</View>;
+  };
 
   return (
     <ScrollView
@@ -121,9 +134,7 @@ export default function QuizResultScreen() {
             <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>
               Difficulté:
             </Text>
-            <Text style={[styles.detailValue, { color: colors.text }]}>
-              {difficultyStars}
-            </Text>
+            {renderDifficulty()}
           </View>
 
           <View style={styles.detailRow}>
@@ -264,6 +275,10 @@ const styles = StyleSheet.create({
   detailValue: {
     fontSize: 16,
     fontWeight: "600",
+  },
+  starsContainer: {
+    flexDirection: 'row',
+    gap: 2,
   },
   breathingPattern: {
     marginTop: 16,

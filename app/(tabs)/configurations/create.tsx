@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import PageLayout from '@/components/PageLayout';
+import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
 import { useConfiguration } from '@/hooks/useConfiguration';
 import ConfigurationForm from '@/components/configurations/ConfigurationForm';
@@ -63,10 +64,11 @@ export default function CreateConfigurationScreen() {
   };
 
   return (
-    <PageLayout header footer>
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={() => router.back()}>
+    <AuthGuard requireAuth={true}>
+      <PageLayout header footer>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.title, { color: colors.text }]}>
@@ -91,7 +93,8 @@ export default function CreateConfigurationScreen() {
           />
         </View>
       </View>
-    </PageLayout>
+      </PageLayout>
+    </AuthGuard>
   );
 }
 

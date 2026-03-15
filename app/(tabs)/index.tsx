@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import PageLayout from '@/components/PageLayout';
+import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfiguration } from '@/hooks/useConfiguration';
@@ -83,8 +84,9 @@ export default function DashboardScreen() {
   };
 
   return (
-    <PageLayout header footer>
-      <ScrollView
+    <AuthGuard requireAuth={true}>
+      <PageLayout header footer>
+        <ScrollView
         style={[styles.container, { backgroundColor: colors.background }]}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
@@ -199,7 +201,8 @@ export default function DashboardScreen() {
           </View>
         </View>
       </ScrollView>
-    </PageLayout>
+      </PageLayout>
+    </AuthGuard>
   );
 }
 

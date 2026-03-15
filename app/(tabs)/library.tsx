@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import PageLayout from '@/components/PageLayout';
+import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
 import { useConfiguration } from '@/hooks/useConfiguration';
 import ConfigurationCard from '@/components/configurations/ConfigurationCard';
@@ -144,12 +145,13 @@ export default function LibraryScreen() {
   };
 
   return (
-    <PageLayout header footer>
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={styles.headerContainer}>
-          <Text style={[styles.title, { color: colors.text }]}>
-            Bibliothèque
-          </Text>
+    <AuthGuard requireAuth={true}>
+      <PageLayout header footer>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+          <View style={styles.headerContainer}>
+            <Text style={[styles.title, { color: colors.text }]}>
+              Bibliothèque
+            </Text>
           <View style={styles.headerButtons}>
             <TouchableOpacity
               style={[styles.headerButton, { backgroundColor: colors.surface }]}
@@ -218,7 +220,8 @@ export default function LibraryScreen() {
 
         {renderContent()}
       </View>
-    </PageLayout>
+      </PageLayout>
+    </AuthGuard>
   );
 }
 
