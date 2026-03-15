@@ -11,12 +11,10 @@ import { CreateConfigurationRequestDTO, UpdateConfigurationRequestDTO } from '@/
 
 type ConfigurationContextType = {
   myConfigurations: Configuration[];
-  adminConfigurations: Configuration[];
   bookmarks: Bookmark[];
   isLoading: boolean;
   error: string | null;
   refreshMyConfigurations: () => Promise<void>;
-  refreshAdminConfigurations: () => Promise<void>;
   refreshBookmarks: () => Promise<void>;
   createConfiguration: (data: CreateConfigurationRequestDTO) => Promise<Configuration>;
   updateConfiguration: (id: string, data: UpdateConfigurationRequestDTO) => Promise<Configuration>;
@@ -30,7 +28,6 @@ const ConfigurationContext = createContext<ConfigurationContextType | undefined>
 
 export function ConfigurationProvider({ children }: { children: ReactNode }) {
   const [myConfigurations, setMyConfigurations] = useState<Configuration[]>([]);
-  const [adminConfigurations, setAdminConfigurations] = useState<Configuration[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,20 +41,6 @@ export function ConfigurationProvider({ children }: { children: ReactNode }) {
     } catch (err: any) {
       console.error('Failed to load my configurations:', err);
       setError(err.message || 'Erreur lors du chargement des configurations');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const refreshAdminConfigurations = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const configs = await configurationApi.getAdminConfigurations();
-      setAdminConfigurations(configs);
-    } catch (err: any) {
-      console.error('Failed to load admin configurations:', err);
-      setError(err.message || 'Erreur lors du chargement des configurations admin');
     } finally {
       setIsLoading(false);
     }
@@ -163,22 +146,14 @@ export function ConfigurationProvider({ children }: { children: ReactNode }) {
     return bookmarks.some((b) => b.configurationId === configurationId);
   };
 
-  useEffect(() => {
-    refreshMyConfigurations();
-    refreshAdminConfigurations();
-    refreshBookmarks();
-  }, []);
-
   return (
     <ConfigurationContext.Provider
       value={{
         myConfigurations,
-        adminConfigurations,
         bookmarks,
         isLoading,
         error,
         refreshMyConfigurations,
-        refreshAdminConfigurations,
         refreshBookmarks,
         createConfiguration,
         updateConfiguration,

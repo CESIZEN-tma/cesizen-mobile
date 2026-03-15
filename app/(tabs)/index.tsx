@@ -5,24 +5,24 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import PageLayout from '@/components/PageLayout';
-import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfiguration } from '@/hooks/useConfiguration';
 import ConfigurationCard from '@/components/configurations/ConfigurationCard';
 import Loader from '@/components/shared/Loader';
+import PressButton from '@/components/shared/PressButton';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 export default function DashboardScreen() {
   const { colors } = useTheme();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const router = useRouter();
   const {
     myConfigurations,
-    adminConfigurations,
     bookmarks,
     isLoading,
     addBookmark,
@@ -32,10 +32,24 @@ export default function DashboardScreen() {
   } = useConfiguration();
 
   useEffect(() => {
-    refreshMyConfigurations();
-  }, []);
+    if (isAuthenticated) {
+      refreshMyConfigurations();
+    }
+  }, [isAuthenticated]);
 
   const handleBookmark = async (configId: string) => {
+    if (!isAuthenticated) {
+      Alert.alert(
+        'Connexion requise',
+        'Vous devez être connecté pour gérer vos favoris',
+        [
+          { text: 'Annuler', style: 'cancel' },
+          { text: 'Se connecter', onPress: () => router.push('/(auth)/login' as any) },
+        ]
+      );
+      return;
+    }
+
     try {
       if (isBookmarked(configId)) {
         await removeBookmark(configId);
@@ -52,7 +66,13 @@ export default function DashboardScreen() {
       icon: 'play-circle',
       label: 'Démarrer un exercice',
       color: colors.primary,
-      onPress: () => router.push('/(tabs)/library' as any),
+      onPress: () => {
+        if (isAuthenticated) {
+          router.push('/(tabs)/library' as any);
+        } else {
+          router.push('/(auth)/login' as any);
+        }
+      },
     },
     {
       icon: 'clipboard',
@@ -61,16 +81,16 @@ export default function DashboardScreen() {
       onPress: () => router.push('/(tabs)/quizzes' as any),
     },
     {
-      icon: 'search',
-      label: 'Parcourir',
-      color: '#ffc800',
-      onPress: () => router.push('/(tabs)/configurations/browse' as any),
-    },
-    {
       icon: 'add-circle',
       label: 'Créer une config',
       color: '#ff4b4b',
-      onPress: () => router.push('/(tabs)/configurations/create' as any),
+      onPress: () => {
+        if (isAuthenticated) {
+          router.push('/(tabs)/configurations/create' as any);
+        } else {
+          router.push('/(auth)/login' as any);
+        }
+      },
     },
   ];
 
@@ -84,9 +104,8 @@ export default function DashboardScreen() {
   };
 
   return (
-    <AuthGuard requireAuth={true}>
-      <PageLayout header footer>
-        <ScrollView
+    <PageLayout header footer>
+      <ScrollView
         style={[styles.container, { backgroundColor: colors.background }]}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
@@ -95,9 +114,32 @@ export default function DashboardScreen() {
           <Text style={[styles.greeting, { color: colors.textSecondary }]}>
             {getGreeting()}
           </Text>
-          <Text style={[styles.userName, { color: colors.text }]}>
-            {user?.firstName} {user?.lastName}
-          </Text>
+          {isAuthenticated ? (
+            <Text style={[styles.userName, { color: colors.text }]}>
+              {user?.firstName} {user?.lastName}
+            </Text>
+          ) : (
+            <>
+              <Text style={[styles.userName, { color: colors.text }]}>
+                Bienvenue sur CesiZen
+              </Text>
+              <View style={styles.authButtonsContainer}>
+                <PressButton
+                  label="Se connecter"
+                  onPress={() => router.push('/(auth)/login' as any)}
+                  width={150}
+                  height={44}
+                />
+                <PressButton
+                  label="Créer un compte"
+                  onPress={() => router.push('/(auth)/register' as any)}
+                  width={150}
+                  height={44}
+                  secondary
+                />
+              </View>
+            </>
+          )}
         </View>
 
         <View style={styles.quickActionsSection}>
@@ -131,54 +173,58 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {isLoading ? (
-          <View style={styles.loaderContainer}>
-            <Loader size={40} />
-          </View>
-        ) : recentConfigurations.length > 0 ? (
-          <View style={styles.recentSection}>
-            <View style={styles.sectionHeader}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                Mes configurations récentes
-              </Text>
-              <TouchableOpacity
-                onPress={() => router.push('/(tabs)/library' as any)}
-              >
-                <Text style={[styles.seeAllText, { color: colors.primary }]}>
-                  Voir tout
+        {isAuthenticated && (
+          <>
+            {isLoading ? (
+              <View style={styles.loaderContainer}>
+                <Loader size={40} />
+              </View>
+            ) : recentConfigurations.length > 0 ? (
+              <View style={styles.recentSection}>
+                <View style={styles.sectionHeader}>
+                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                    Mes configurations récentes
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => router.push('/(tabs)/library' as any)}
+                  >
+                    <Text style={[styles.seeAllText, { color: colors.primary }]}>
+                      Voir tout
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {recentConfigurations.map((config) => (
+                  <ConfigurationCard
+                    key={config.id}
+                    configuration={config}
+                    onBookmark={handleBookmark}
+                    isBookmarked={isBookmarked(config.id)}
+                    showActions={true}
+                  />
+                ))}
+              </View>
+            ) : (
+              <View style={styles.emptyState}>
+                <Ionicons
+                  name="add-circle-outline"
+                  size={80}
+                  color={colors.textSecondary}
+                />
+                <Text style={[styles.emptyTitle, { color: colors.text }]}>
+                  Aucune configuration
                 </Text>
-              </TouchableOpacity>
-            </View>
-            {recentConfigurations.map((config) => (
-              <ConfigurationCard
-                key={config.id}
-                configuration={config}
-                onBookmark={handleBookmark}
-                isBookmarked={isBookmarked(config.id)}
-                showActions={true}
-              />
-            ))}
-          </View>
-        ) : (
-          <View style={styles.emptyState}>
-            <Ionicons
-              name="add-circle-outline"
-              size={80}
-              color={colors.textSecondary}
-            />
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>
-              Aucune configuration
-            </Text>
-            <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
-              Passez un quiz ou créez votre première configuration personnalisée
-            </Text>
-            <TouchableOpacity
-              style={[styles.emptyButton, { backgroundColor: colors.primary }]}
-              onPress={() => router.push('/(tabs)/quizzes' as any)}
-            >
-              <Text style={styles.emptyButtonText}>Passer un quiz</Text>
-            </TouchableOpacity>
-          </View>
+                <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
+                  Passez un quiz ou créez votre première configuration personnalisée
+                </Text>
+                <TouchableOpacity
+                  style={[styles.emptyButton, { backgroundColor: colors.primary }]}
+                  onPress={() => router.push('/(tabs)/quizzes' as any)}
+                >
+                  <Text style={styles.emptyButtonText}>Passer un quiz</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </>
         )}
 
         <View style={styles.tipsSection}>
@@ -201,8 +247,7 @@ export default function DashboardScreen() {
           </View>
         </View>
       </ScrollView>
-      </PageLayout>
-    </AuthGuard>
+    </PageLayout>
   );
 }
 
@@ -225,6 +270,11 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 32,
     fontWeight: '700',
+  },
+  authButtonsContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 16,
   },
   quickActionsSection: {
     paddingHorizontal: 24,

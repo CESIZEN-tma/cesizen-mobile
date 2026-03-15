@@ -46,20 +46,6 @@ export const configurationApi = {
     return mapConfigurationDtoToModel(response);
   },
 
-  getAdminConfigurations: async (): Promise<Configuration[]> => {
-    const response = await apiClient.get<ConfigurationDTO[]>(
-      ENDPOINTS.CONFIGURATIONS.GET_ALL
-    );
-    return response.map(mapConfigurationDtoToModel);
-  },
-
-  getAdminConfigurationById: async (id: string): Promise<Configuration> => {
-    const response = await apiClient.get<ConfigurationDTO>(
-      ENDPOINTS.CONFIGURATIONS.GET_BY_ID(id)
-    );
-    return mapConfigurationDtoToModel(response);
-  },
-
   createConfiguration: async (
     data: CreateConfigurationRequestDTO
   ): Promise<Configuration> => {

@@ -23,7 +23,6 @@ export default function LibraryScreen() {
   const {
     myConfigurations,
     bookmarks,
-    adminConfigurations,
     isLoading,
     deleteConfiguration,
     addBookmark,
@@ -77,16 +76,9 @@ export default function LibraryScreen() {
     router.push('/(tabs)/configurations/create' as any);
   };
 
-  const handleBrowse = () => {
-    router.push('/(tabs)/configurations/browse' as any);
-  };
-
   const getBookmarkedConfigurations = (): Configuration[] => {
     const bookmarkedIds = bookmarks.map((b) => b.configurationId);
-    return [
-      ...myConfigurations.filter((c) => bookmarkedIds.includes(c.id)),
-      ...adminConfigurations.filter((c) => bookmarkedIds.includes(c.id)),
-    ];
+    return myConfigurations.filter((c) => bookmarkedIds.includes(c.id));
   };
 
   const renderContent = () => {
@@ -152,13 +144,6 @@ export default function LibraryScreen() {
             <Text style={[styles.title, { color: colors.text }]}>
               Bibliothèque
             </Text>
-          <View style={styles.headerButtons}>
-            <TouchableOpacity
-              style={[styles.headerButton, { backgroundColor: colors.surface }]}
-              onPress={handleBrowse}
-            >
-              <Ionicons name="search" size={20} color={colors.primary} />
-            </TouchableOpacity>
             <TouchableOpacity
               style={[styles.headerButton, { backgroundColor: colors.primary }]}
               onPress={handleCreateNew}
@@ -166,7 +151,6 @@ export default function LibraryScreen() {
               <Ionicons name="add" size={20} color="#ffffff" />
             </TouchableOpacity>
           </View>
-        </View>
 
         <View style={styles.tabsContainer}>
           <TouchableOpacity
