@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import PageLayout from '@/components/PageLayout';
+import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
 import { useConfiguration } from '@/hooks/useConfiguration';
 import ConfigurationForm from '@/components/configurations/ConfigurationForm';
@@ -129,15 +130,16 @@ export default function EditConfigurationScreen() {
   }
 
   return (
-    <PageLayout header footer>
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.title, { color: colors.text }]}>
-            Modifier Configuration
-          </Text>
+    <AuthGuard requireAuth={true}>
+      <PageLayout header footer>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color={colors.text} />
+            </TouchableOpacity>
+            <Text style={[styles.title, { color: colors.text }]}>
+              Modifier Configuration
+            </Text>
           <View style={{ width: 24 }} />
         </View>
 
@@ -157,7 +159,8 @@ export default function EditConfigurationScreen() {
           />
         </View>
       </View>
-    </PageLayout>
+      </PageLayout>
+    </AuthGuard>
   );
 }
 

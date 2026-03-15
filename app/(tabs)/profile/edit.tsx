@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import PageLayout from '@/components/PageLayout';
+import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
 import { useAuth } from '@/hooks/useAuth';
 import TextInput from '@/components/shared/forms/TextInput';
@@ -57,6 +58,7 @@ export default function EditProfileScreen() {
   };
 
   return (
+    <AuthGuard requireAuth={true}>
     <PageLayout header footer>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.headerContainer}>
@@ -100,7 +102,8 @@ export default function EditProfileScreen() {
           />
         </View>
       </View>
-    </PageLayout>
+      </PageLayout>
+    </AuthGuard>
   );
 }
 
