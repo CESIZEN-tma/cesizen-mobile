@@ -1,8 +1,8 @@
 import Constants from 'expo-constants';
 import secureStoreService from '../secureStore.service';
 
-const API_BASE_URL = Constants.expoConfig?.extra?.apiBaseUrl || 'http://localhost:5027/api';
-const API_KEY = Constants.expoConfig?.extra?.apiKey || 'e93a27d4-e39a-44b3-9ad1-58a43d75864d';
+const API_BASE_URL = Constants.expoConfig?.extra?.apiBaseUrl || 'http://localhost:3000';
+const API_KEY = Constants.expoConfig?.extra?.apiKey || 'API_KEY';
 
 export class ApiError extends Error {
   constructor(
@@ -65,10 +65,10 @@ async function fetchWithAuth(
 ): Promise<any> {
   const token = await secureStoreService.getToken();
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'x-api-key': API_KEY,
     'Content-Type': 'application/json',
-    ...options.headers,
+    ...(options.headers as Record<string, string>),
   };
 
   if (token) {
