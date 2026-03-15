@@ -10,7 +10,12 @@ type NavItem = {
   route: string;
 };
 
-const navItems: NavItem[] = [{ icon: "home", route: "/" }];
+const navItems: NavItem[] = [
+  { icon: "home", route: "/(tabs)" },
+  { icon: "list", route: "/(tabs)/quizzes" },
+  { icon: "library", route: "/(tabs)/library" },
+  { icon: "person", route: "/(tabs)/profile" },
+];
 
 const Footer = () => {
   const { colors } = useTheme();
