@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import PageLayout from '@/components/PageLayout';
+import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
 import TextInput from '@/components/shared/forms/TextInput';
 import PressButton from '@/components/shared/PressButton';
@@ -65,6 +66,7 @@ export default function ChangePasswordScreen() {
   };
 
   return (
+    <AuthGuard requireAuth={true}>
     <PageLayout header footer>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.headerContainer}>
@@ -140,7 +142,8 @@ export default function ChangePasswordScreen() {
           />
         </View>
       </View>
-    </PageLayout>
+      </PageLayout>
+    </AuthGuard>
   );
 }
 

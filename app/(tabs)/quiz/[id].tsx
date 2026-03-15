@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTheme } from "@/hooks/themeHooks";
+import { useAuth } from "@/hooks/useAuth";
 import { useQuiz } from "@/hooks/useQuiz";
 import { quizApi } from "@/app/services/api/quizApi";
 import QuizQuestion from "@/components/quiz/QuizQuestion";
@@ -12,6 +13,7 @@ import { Quiz } from "@/types/quiz.types";
 
 export default function QuizTakingScreen() {
   const { colors } = useTheme();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const {
@@ -73,6 +75,21 @@ export default function QuizTakingScreen() {
   };
 
   const handleSubmit = async () => {
+    if (!isAuthenticated) {
+      Alert.alert(
+        "Connexion requise",
+        "Vous devez être connecté pour sauvegarder votre configuration personnalisée.",
+        [
+          { text: "Annuler", style: "cancel" },
+          {
+            text: "Se connecter",
+            onPress: () => router.replace("/(auth)/login" as any),
+          },
+        ]
+      );
+      return;
+    }
+
     try {
       const configuration = await submitQuiz();
       router.replace({

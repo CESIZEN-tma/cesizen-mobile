@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import PageLayout from '@/components/PageLayout';
+import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
 import Loader from '@/components/shared/Loader';
 import { Ionicons } from '@expo/vector-icons';
@@ -222,6 +223,7 @@ export default function SessionsScreen() {
   };
 
   return (
+    <AuthGuard requireAuth={true}>
     <PageLayout header footer>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.headerContainer}>
@@ -238,7 +240,8 @@ export default function SessionsScreen() {
 
         {renderContent()}
       </View>
-    </PageLayout>
+      </PageLayout>
+    </AuthGuard>
   );
 }
 
