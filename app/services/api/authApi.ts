@@ -1,3 +1,4 @@
+import secureStoreService from '../secureStore.service';
 import { apiClient } from './apiClient';
 import { ENDPOINTS } from './endpoints';
 import {
@@ -50,8 +51,10 @@ export const authApi = {
     return apiClient.post(ENDPOINTS.AUTH.REFRESH_TOKEN, { refreshToken });
   },
 
-  logout: async (): Promise<void> => {
-    return apiClient.post(ENDPOINTS.AUTH.LOGOUT);
+  logout: async (refreshToken: string): Promise<void> => {
+    return apiClient.post(ENDPOINTS.AUTH.LOGOUT, {
+      refreshToken
+    });
   },
 
   changePassword: async (
