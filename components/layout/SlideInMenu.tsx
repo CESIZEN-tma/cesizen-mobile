@@ -62,7 +62,6 @@ const SlideInMenu = ({ isOpen, onClose, menuItems = [] }: SlideInMenuProps) => {
       label: "Accueil",
       icon: "home-outline",
       onPress: () => {
-        console.log("Navigate to Home");
         handleClose();
       },
     },
@@ -70,7 +69,6 @@ const SlideInMenu = ({ isOpen, onClose, menuItems = [] }: SlideInMenuProps) => {
       label: "Profil",
       icon: "person-outline",
       onPress: () => {
-        console.log("Navigate to Profile");
         handleClose();
       },
     },
@@ -78,7 +76,6 @@ const SlideInMenu = ({ isOpen, onClose, menuItems = [] }: SlideInMenuProps) => {
       label: "Paramètres",
       icon: "settings-outline",
       onPress: () => {
-        console.log("Navigate to Settings");
         handleClose();
       },
     },
@@ -86,7 +83,6 @@ const SlideInMenu = ({ isOpen, onClose, menuItems = [] }: SlideInMenuProps) => {
       label: "Notifications",
       icon: "notifications-outline",
       onPress: () => {
-        console.log("Navigate to Notifications");
         handleClose();
       },
     },
@@ -94,7 +90,6 @@ const SlideInMenu = ({ isOpen, onClose, menuItems = [] }: SlideInMenuProps) => {
       label: "Messages",
       icon: "mail-outline",
       onPress: () => {
-        console.log("Navigate to Messages");
         handleClose();
       },
     },
@@ -102,7 +97,6 @@ const SlideInMenu = ({ isOpen, onClose, menuItems = [] }: SlideInMenuProps) => {
       label: "Favoris",
       icon: "heart-outline",
       onPress: () => {
-        console.log("Navigate to Favorites");
         handleClose();
       },
     },
@@ -110,7 +104,6 @@ const SlideInMenu = ({ isOpen, onClose, menuItems = [] }: SlideInMenuProps) => {
       label: "Aide",
       icon: "help-circle-outline",
       onPress: () => {
-        console.log("Navigate to Help");
         handleClose();
       },
     },
@@ -118,7 +111,6 @@ const SlideInMenu = ({ isOpen, onClose, menuItems = [] }: SlideInMenuProps) => {
       label: "À propos",
       icon: "information-circle-outline",
       onPress: () => {
-        console.log("Navigate to About");
         handleClose();
       },
     },

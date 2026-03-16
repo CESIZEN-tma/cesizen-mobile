@@ -36,7 +36,6 @@ const ForgotPassword = () => {
 
   const handleSubmit = () => {
     if (validateEmail()) {
-      console.log("Reset password for:", email);
       setSubmitted(true);
       // Handle password reset logic here
     }
