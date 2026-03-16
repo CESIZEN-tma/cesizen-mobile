@@ -25,7 +25,13 @@ export default function ProfileScreen() {
       {
         text: 'Déconnexion',
         style: 'destructive',
-        onPress: logout,
+        onPress: async () => {
+          try {
+            await logout();
+          } catch (error) {
+            console.error('Logout error:', error);
+          }
+        },
       },
     ]);
   };

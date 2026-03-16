@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { accessToken, refreshToken } = await authApi.login(
         email,
-        password
+        password,
       );
 
       await secureStoreService.saveToken(accessToken);
@@ -106,7 +106,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await authApi.logout();
+      const refreshToken = (await secureStoreService.getRefreshToken()) ?? "error";
+      await authApi.logout(refreshToken);
       await secureStoreService.logout();
       setIsAuthenticated(false);
       setUser(null);
