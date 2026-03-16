@@ -1,6 +1,7 @@
 import { useTheme } from "@/hooks/themeHooks";
+import { Ionicons } from "@expo/vector-icons";
 import React, { useRef } from "react";
-import { Animated, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type PressableButtonProps = {
   width?: number;
@@ -8,6 +9,7 @@ type PressableButtonProps = {
   secondary?: boolean;
   label: string;
   onPress?: () => void;
+  icon?: keyof typeof Ionicons.glyphMap;
 };
 
 export default function PressButton({
@@ -16,6 +18,7 @@ export default function PressButton({
   secondary = false,
   label,
   onPress,
+  icon,
 }: PressableButtonProps) {
   const { colors } = useTheme();
   const [borderRadius, setBorderRadius] = React.useState(2);
@@ -63,7 +66,12 @@ export default function PressButton({
           },
         ]}
       >
-        <Text style={[styles.text, { color: "#fff" }]}>{label}</Text>
+        <View style={styles.content}>
+          {icon && (
+            <Ionicons name={icon} size={20} color="#fff" style={styles.icon} />
+          )}
+          {label && <Text style={[styles.text, { color: "#fff" }]}>{label}</Text>}
+        </View>
       </Animated.View>
     </TouchableOpacity>
   );
@@ -76,6 +84,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  content: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+
+  icon: {
+    marginRight: 4,
   },
 
   text: {

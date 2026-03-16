@@ -30,7 +30,7 @@ const PageLayout = ({
 
       <Content
         style={styles.content}
-        contentContainerStyle={scrollable ? styles.scrollContent : undefined}
+        contentContainerStyle={scrollable ? (footer ? styles.scrollContentWithFooter : styles.scrollContent) : (footer ? styles.contentWithFooter : undefined)}
       >
         {children}
       </Content>
@@ -50,6 +50,13 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 20,
+  },
+  scrollContentWithFooter: {
+    flexGrow: 1,
+    paddingBottom: 90,
+  },
+  contentWithFooter: {
+    paddingBottom: 80,
   },
 });
 

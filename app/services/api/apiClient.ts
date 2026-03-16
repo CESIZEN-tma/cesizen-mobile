@@ -116,6 +116,7 @@ async function fetchWithAuth(
       // Response is not JSON
     }
 
+    console.error(`API Error [${response.status}] ${url}:`, errorDetails || errorMessage);
     throw new ApiError(response.status, errorMessage, errorDetails);
   }
 

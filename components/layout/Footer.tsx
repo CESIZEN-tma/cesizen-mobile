@@ -1,27 +1,56 @@
 import { useTheme } from "@/hooks/themeHooks";
 import { Ionicons } from "@expo/vector-icons";
 import { usePathname, useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type NavItem = {
   icon: keyof typeof Ionicons.glyphMap;
+  activeIcon: keyof typeof Ionicons.glyphMap;
   route: string;
+  matchPaths: string[];
 };
 
 const navItems: NavItem[] = [
-  { icon: "home", route: "/(tabs)" },
-  { icon: "list", route: "/(tabs)/quizzes" },
-  { icon: "library", route: "/(tabs)/library" },
-  { icon: "person", route: "/(tabs)/profile" },
+  {
+    icon: "home-outline",
+    activeIcon: "home",
+    route: "/(tabs)",
+    matchPaths: ["/", "/(tabs)", "/(tabs)/"]
+  },
+  {
+    icon: "list-outline",
+    activeIcon: "list",
+    route: "/(tabs)/quizzes",
+    matchPaths: ["/quizzes", "/(tabs)/quizzes"]
+  },
+  {
+    icon: "library-outline",
+    activeIcon: "library",
+    route: "/(tabs)/library",
+    matchPaths: ["/library", "/(tabs)/library"]
+  },
+  {
+    icon: "person-outline",
+    activeIcon: "person",
+    route: "/(tabs)/profile",
+    matchPaths: ["/profile", "/(tabs)/profile"]
+  },
 ];
+
+const isRouteActive = (pathname: string, item: NavItem): boolean => {
+  return item.matchPaths.some(path => pathname === path || pathname.startsWith(path + "/"));
+};
 
 const Footer = () => {
   const { colors } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+  }, [pathname]);
 
   return (
     <View
@@ -34,17 +63,18 @@ const Footer = () => {
       ]}
     >
       {navItems.map((item, index) => {
-        const isActive = pathname === item.route;
+        const isActive = isRouteActive(pathname, item);
         return (
           <TouchableOpacity
             key={index}
             style={styles.navItem}
             onPress={() => router.navigate(item.route as any)}
+            activeOpacity={0.7}
           >
             <Ionicons
-              name={item.icon}
+              name={isActive ? item.activeIcon : item.icon}
               size={28}
-              color={isActive ? colors.secondary : colors.text}
+              color={isActive ? colors.primary : colors.textSecondary}
             />
           </TouchableOpacity>
         );
