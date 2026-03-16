@@ -2,8 +2,9 @@ import { useTheme } from "@/hooks/themeHooks";
 import { useAuth } from "@/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import Switch from "../shared/Switch";
 import SlideInMenu from "./SlideInMenu";
 
@@ -16,6 +17,15 @@ const Header = ({ onMenuPress }: HeaderProps) => {
   const { isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    opacity.value = withTiming(1, { duration: 600 });
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
 
   const handleMenuPress = () => {
     if (onMenuPress) {
@@ -27,7 +37,7 @@ const Header = ({ onMenuPress }: HeaderProps) => {
 
   const handleAuthAction = () => {
     if (isAuthenticated) {
-      logout();
+      router.push("/(tabs)/profile" as any);
     } else {
       router.push("/(auth)/login");
     }
@@ -35,7 +45,7 @@ const Header = ({ onMenuPress }: HeaderProps) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <Animated.View style={[styles.container, animatedStyle]}>
         <TouchableOpacity onPress={handleMenuPress} style={styles.menuButton}>
           <Ionicons name="menu" size={28} color={colors.text} />
         </TouchableOpacity>
@@ -84,7 +94,7 @@ const Header = ({ onMenuPress }: HeaderProps) => {
           iconColorOff="#1e293b"
         />
       </View>
-    </View>
+    </Animated.View>
 
     <SlideInMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
   </>
