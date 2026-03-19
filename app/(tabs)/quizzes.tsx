@@ -69,7 +69,7 @@ export default function QuizzesScreen() {
   }
 
   return (
-    <PageLayout header footer>
+    <PageLayout header footer scrollable={false}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Text style={[styles.title, { color: colors.text }]}>
           Quiz de respiration
@@ -108,7 +108,7 @@ export default function QuizzesScreen() {
                       {item.nom}
                     </Text>
                     <Text style={[styles.quizDetails, { color: colors.textSecondary }]}>
-                      {item.questions.length} question{item.questions.length > 1 ? "s" : ""}
+                      {item.questionCount} question{item.questionCount > 1 ? "s" : ""}
                     </Text>
                   </View>
                   <Ionicons

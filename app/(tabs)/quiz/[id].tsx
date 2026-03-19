@@ -46,7 +46,7 @@ export default function QuizTakingScreen() {
         id: quizData.id,
         nom: quizData.nom,
         active: quizData.active,
-        questions: quizData.questions
+        questions: (quizData.questions ?? [])
           .map((q) => ({
             id: q.id,
             text: q.text,

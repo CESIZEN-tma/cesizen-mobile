@@ -64,7 +64,8 @@ export interface QuizDTO {
   id: string;
   nom: string;
   active: boolean;
-  questions: QuestionDTO[];
+  questionCount: number;
+  questions?: QuestionDTO[];
 }
 
 export interface QuestionDTO {
