@@ -17,7 +17,7 @@ export default function QuizQuestion({
 }: QuizQuestionProps) {
   const { colors } = useTheme();
 
-  const sortedOptions = [...question.responsesOptions].sort(
+  const sortedOptions = [...(question.responsesOptions ?? [])].sort(
     (a, b) => a.position - b.position
   );
 

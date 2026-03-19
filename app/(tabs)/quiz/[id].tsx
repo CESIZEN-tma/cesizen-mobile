@@ -52,7 +52,7 @@ export default function QuizTakingScreen() {
             text: q.text,
             position: q.position,
             idQuizz: q.idQuizz,
-            responsesOptions: q.responsesOptions,
+            responsesOptions: q.responsesOptions ?? [],
           }))
           .sort((a, b) => a.position - b.position),
       };
