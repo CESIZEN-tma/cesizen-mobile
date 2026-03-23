@@ -51,8 +51,8 @@ export default function QuizTakingScreen() {
             id: q.id,
             text: q.text,
             position: q.position,
-            idQuizz: q.idQuizz,
-            responsesOptions: q.responsesOptions ?? [],
+            idQuizz: quizData.id,
+            responsesOptions: q.options ?? [],
           }))
           .sort((a, b) => a.position - b.position),
       };

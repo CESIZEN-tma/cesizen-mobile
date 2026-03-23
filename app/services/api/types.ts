@@ -72,8 +72,7 @@ export interface QuestionDTO {
   id: string;
   text: string;
   position: number;
-  idQuizz: string;
-  responsesOptions: ResponseOptionDTO[];
+  options: ResponseOptionDTO[];
 }
 
 export interface ResponseOptionDTO {
