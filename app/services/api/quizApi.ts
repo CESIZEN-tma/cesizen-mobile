@@ -12,9 +12,11 @@ export const quizApi = {
   },
 
   submitQuizResponses: async (
+    quizId: string,
     responses: QuizResponseDTO[]
   ): Promise<ConfigurationDTO> => {
     return apiClient.post(ENDPOINTS.USER_CONFIGURATIONS.FROM_QUIZ, {
+      quizId,
       responses,
     });
   },

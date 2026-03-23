@@ -93,7 +93,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         selectedOptionId: r.selectedOptionId,
       }));
 
-      const configDTO = await quizApi.submitQuizResponses(apiResponses);
+      const configDTO = await quizApi.submitQuizResponses(quizState.currentQuiz!.id, apiResponses);
 
       const configuration: Configuration = {
         id: configDTO.id,

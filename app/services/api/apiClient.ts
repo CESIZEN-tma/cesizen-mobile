@@ -80,7 +80,9 @@ async function fetchWithAuth(
     headers,
   });
 
-  if (response.status === 401) {
+  const isPublicEndpoint = url.includes('/login') || url.includes('/register') || url.includes('/forgot-password') || url.includes('/reset-password');
+
+  if (response.status === 401 && !isPublicEndpoint) {
     if (!isRefreshing) {
       isRefreshing = true;
 

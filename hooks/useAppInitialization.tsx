@@ -1,6 +1,6 @@
 import { useConfiguration } from "@/hooks/useConfiguration";
 import { useAuth } from "@/hooks/useAuth";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 type InitializationStep = {
   name: string;
@@ -14,6 +14,9 @@ export const useAppInitialization = () => {
   const [isInitializing, setIsInitializing] = useState(true);
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState("Initialisation...");
+  const hasInitialized = useRef(false);
+  const isAuthenticatedRef = useRef(isAuthenticated);
+  isAuthenticatedRef.current = isAuthenticated;
 
   const initialize = useCallback(async () => {
     try {
@@ -23,7 +26,7 @@ export const useAppInitialization = () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
       setProgress(30);
 
-      if (isAuthenticated) {
+      if (isAuthenticatedRef.current) {
         setCurrentStep("Chargement de vos configurations...");
         try {
           await refreshMyConfigurations();
@@ -52,10 +55,11 @@ export const useAppInitialization = () => {
       setProgress(100);
       setIsInitializing(false);
     }
-  }, [isAuthenticated, refreshMyConfigurations, refreshBookmarks]);
+  }, [refreshMyConfigurations, refreshBookmarks]);
 
   useEffect(() => {
-    if (!authLoading) {
+    if (!authLoading && !hasInitialized.current) {
+      hasInitialized.current = true;
       initialize();
     }
   }, [authLoading, initialize]);
