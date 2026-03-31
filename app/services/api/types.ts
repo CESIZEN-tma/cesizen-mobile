@@ -64,15 +64,15 @@ export interface QuizDTO {
   id: string;
   nom: string;
   active: boolean;
-  questions: QuestionDTO[];
+  questionCount: number;
+  questions?: QuestionDTO[];
 }
 
 export interface QuestionDTO {
   id: string;
   text: string;
   position: number;
-  idQuizz: string;
-  responsesOptions: ResponseOptionDTO[];
+  options: ResponseOptionDTO[];
 }
 
 export interface ResponseOptionDTO {

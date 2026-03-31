@@ -92,6 +92,12 @@ export default function DashboardScreen() {
         }
       },
     },
+    {
+      icon: 'information-circle',
+      label: "Voir l'onboarding",
+      color: '#8b5cf6',
+      onPress: () => router.push('/(auth)/firstOpenedPage' as any),
+    },
   ];
 
   const recentConfigurations = myConfigurations.slice(0, 3);

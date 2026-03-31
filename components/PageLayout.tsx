@@ -1,7 +1,7 @@
 import { useTheme } from "@/hooks/themeHooks";
 import React, { ReactNode } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Footer from "./layout/Footer";
 import Header from "./layout/Header";
 
@@ -19,18 +19,32 @@ const PageLayout = ({
   scrollable = true,
 }: PageLayoutProps) => {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
 
   const Content = scrollable ? ScrollView : View;
 
+  const getContentStyle = () => {
+    if (scrollable) {
+      return footer
+        ? { flexGrow: 1, paddingBottom: 80 + insets.bottom }
+        : { flexGrow: 1, paddingBottom: insets.bottom + 20 };
+    } else {
+      return footer
+        ? { paddingBottom: 80 + insets.bottom }
+        : undefined;
+    }
+  };
+
   return (
     <SafeAreaView
+      edges={["top", "left", "right"]}
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       {header && <Header />}
 
       <Content
-        style={styles.content}
-        contentContainerStyle={scrollable ? (footer ? styles.scrollContentWithFooter : styles.scrollContent) : (footer ? styles.contentWithFooter : undefined)}
+        style={scrollable ? styles.content : [styles.content, getContentStyle()]}
+        contentContainerStyle={scrollable ? getContentStyle() : undefined}
       >
         {children}
       </Content>
@@ -46,17 +60,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 20,
-  },
-  scrollContentWithFooter: {
-    flexGrow: 1,
-    paddingBottom: 90,
-  },
-  contentWithFooter: {
-    paddingBottom: 80,
   },
 });
 

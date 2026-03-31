@@ -5,6 +5,8 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
 } from "react-native";
 import PageLayout from "@/components/PageLayout";
 import { useTheme } from "@/hooks/themeHooks";
@@ -13,13 +15,24 @@ import { QuizDTO } from "@/app/services/api/types";
 import Loader from "@/components/shared/Loader";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+const PAGE_SIZE = 5;
 
 export default function QuizzesScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [quizzes, setQuizzes] = useState<QuizDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const handleSearch = (text: string) => {
+    setSearch(text);
+    setVisibleCount(PAGE_SIZE);
+  };
 
   useEffect(() => {
     loadQuizzes();
@@ -29,12 +42,29 @@ export default function QuizzesScreen() {
     try {
       setIsLoading(true);
       const data = await quizApi.getQuizzes();
-      setQuizzes(data.filter((q) => q.active));
+      const active = data.filter((q) => q.active);
+      const unique = active.filter(
+        (q, index, self) => self.findIndex((q2) => q2.id === q.id) === index
+      );
+      setQuizzes(unique);
     } catch (err: any) {
       console.error("Failed to load quizzes:", err);
       setError("Impossible de charger les quiz. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const filteredQuizzes = quizzes.filter((q) =>
+    q.nom.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const visibleQuizzes = filteredQuizzes.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredQuizzes.length;
+
+  const loadMore = () => {
+    if (hasMore) {
+      setVisibleCount((prev) => prev + PAGE_SIZE);
     }
   };
 
@@ -69,7 +99,7 @@ export default function QuizzesScreen() {
   }
 
   return (
-    <PageLayout header footer>
+    <PageLayout header footer scrollable={false}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Text style={[styles.title, { color: colors.text }]}>
           Quiz de respiration
@@ -78,16 +108,32 @@ export default function QuizzesScreen() {
           Découvrez le pattern de respiration qui vous convient
         </Text>
 
-        {quizzes.length === 0 ? (
+        <View style={[styles.searchContainer, { backgroundColor: colors.surface }]}>
+          <Ionicons name="search-outline" size={20} color={colors.textSecondary} style={styles.searchIcon} />
+          <TextInput
+            style={[styles.searchInput, { color: colors.text }]}
+            placeholder="Rechercher un quiz..."
+            placeholderTextColor={colors.textSecondary}
+            value={search}
+            onChangeText={handleSearch}
+          />
+          {search.length > 0 && (
+            <TouchableOpacity onPress={() => handleSearch("")}>
+              <Ionicons name="close-circle" size={18} color={colors.textSecondary} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {filteredQuizzes.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Ionicons name="documents-outline" size={80} color={colors.textSecondary} />
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-              Aucun quiz disponible pour le moment
+              {search.length > 0 ? "Aucun résultat pour cette recherche" : "Aucun quiz disponible pour le moment"}
             </Text>
           </View>
         ) : (
           <FlatList
-            data={quizzes}
+            data={visibleQuizzes}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <TouchableOpacity
@@ -108,7 +154,7 @@ export default function QuizzesScreen() {
                       {item.nom}
                     </Text>
                     <Text style={[styles.quizDetails, { color: colors.textSecondary }]}>
-                      {item.questions.length} question{item.questions.length > 1 ? "s" : ""}
+                      {item.questionCount} question{item.questionCount > 1 ? "s" : ""}
                     </Text>
                   </View>
                   <Ionicons
@@ -119,8 +165,18 @@ export default function QuizzesScreen() {
                 </View>
               </TouchableOpacity>
             )}
-            contentContainerStyle={styles.listContent}
+            contentContainerStyle={[styles.listContent, { paddingBottom: 80 + insets.bottom }]}
             showsVerticalScrollIndicator={false}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.3}
+            ListFooterComponent={
+              hasMore ? (
+                <ActivityIndicator
+                  style={styles.loadingMore}
+                  color={colors.primary}
+                />
+              ) : null
+            }
           />
         )}
       </View>
@@ -149,8 +205,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 24,
   },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 20,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 15,
+  },
   listContent: {
     paddingBottom: 24,
+  },
+  loadingMore: {
+    paddingVertical: 16,
   },
   quizCard: {
     borderRadius: 12,
