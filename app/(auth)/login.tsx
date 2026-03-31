@@ -3,7 +3,7 @@ import TextInput from "@/components/shared/forms/TextInput";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/themeHooks";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -19,6 +19,7 @@ const Login = () => {
   const { colors } = useTheme();
   const router = useRouter();
   const { login } = useAuth();
+  const { notice } = useLocalSearchParams<{ notice?: string }>();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -100,10 +101,17 @@ const Login = () => {
       >
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.back()}
+          onPress={() => router.replace("/(tabs)")}
         >
           <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
+
+        {notice ? (
+          <View style={[styles.noticeBanner, { backgroundColor: colors.primary + "20", borderColor: colors.primary }]}>
+            <Ionicons name="mail-outline" size={18} color={colors.primary} style={styles.noticeIcon} />
+            <Text style={[styles.noticeText, { color: colors.primary }]}>{notice}</Text>
+          </View>
+        ) : null}
 
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.text }]}>
@@ -191,6 +199,26 @@ const styles = StyleSheet.create({
     top: 40,
     left: 24,
     padding: 8,
+  },
+  noticeBanner: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginTop: 80,
+    marginBottom: -16,
+    gap: 8,
+  },
+  noticeIcon: {
+    marginTop: 1,
+  },
+  noticeText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: "500",
   },
   header: {
     marginBottom: 40,

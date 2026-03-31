@@ -2,9 +2,45 @@ import Carousel from "@/components/shared/Carousel";
 import PressButton from "@/components/shared/PressButton";
 import { useTheme } from "@/hooks/themeHooks";
 import { useFirstLaunch } from "@/hooks/useFirstLaunch";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+
+const slides = [
+  {
+    icon: "leaf-outline" as const,
+    title: "Bienvenue sur CesiZen",
+    description:
+      "Prenez soin de votre bien-être mental grâce à des exercices de respiration guidés, conçus pour réduire le stress et l'anxiété.",
+    bg: "#4ade80",
+    iconColor: "#fff",
+  },
+  {
+    icon: "clipboard-outline" as const,
+    title: "Trouvez votre rythme",
+    description:
+      "Répondez à un court quiz et découvrez le pattern de respiration le plus adapté à vos besoins et à votre état du moment.",
+    bg: "#60a5fa",
+    iconColor: "#fff",
+  },
+  {
+    icon: "body-outline" as const,
+    title: "Respirez mieux",
+    description:
+      "Suivez des exercices de respiration guidés en temps réel — cohérence cardiaque, respiration 4-7-8, box breathing et bien d'autres.",
+    bg: "#a78bfa",
+    iconColor: "#fff",
+  },
+  {
+    icon: "library-outline" as const,
+    title: "Explorez les techniques",
+    description:
+      "Accédez à une bibliothèque complète de techniques de respiration et personnalisez vos configurations pour chaque exercice.",
+    bg: "#fb923c",
+    iconColor: "#fff",
+  },
+];
 
 const firstOpenedPage = () => {
   const { colors } = useTheme();
@@ -34,84 +70,84 @@ const firstOpenedPage = () => {
         showArrows={true}
         showDots={true}
       >
-        {/* Slide 1 */}
-        <View style={[styles.slide, { backgroundColor: colors.primary }]}>
-          <Text style={styles.slideText}>Slide 1</Text>
-        </View>
-
-        {/* Slide 2 */}
-        <View style={[styles.slide, { backgroundColor: colors.secondary }]}>
-          <Text style={styles.slideText}>Slide 2</Text>
-        </View>
-
-        {/* Slide 3 */}
-        <View style={[styles.slide, { backgroundColor: "#f59e0b" }]}>
-          <Text style={styles.slideText}>Slide 3</Text>
-        </View>
-
-        {/* Slide avec image */}
-        <View style={[styles.slide, { backgroundColor: colors.surface }]}>
-          <Image
-            source={{ uri: "https://picsum.photos/400/300" }}
-            style={styles.image}
-          />
-          <Text style={[styles.slideText, { color: colors.text }]}>
-            Image Slide
-          </Text>
-        </View>
+        {slides.map((slide, index) => (
+          <View key={index} style={[styles.slide, { backgroundColor: slide.bg }]}>
+            <View style={styles.iconWrapper}>
+              <Ionicons name={slide.icon} size={64} color={slide.iconColor} />
+            </View>
+            <Text style={styles.slideTitle}>{slide.title}</Text>
+            <Text style={styles.slideDescription}>{slide.description}</Text>
+          </View>
+        ))}
       </Carousel>
+
       <View style={styles.buttonsContainer}>
+        <PressButton
+          label="Créer un compte"
+          onPress={handleCreateAccount}
+          width={300}
+          height={48}
+        />
+        <PressButton
+          label="Se connecter"
+          secondary
+          onPress={handleLogin}
+          width={300}
+          height={48}
+        />
         <PressButton
           label="Continuer en tant qu'invité"
           secondary
           onPress={handleContinueAsGuest}
+          width={300}
+          height={48}
         />
-        <PressButton label="Créer un compte" onPress={handleCreateAccount} />
       </View>
     </View>
   );
 };
 
 export default firstOpenedPage;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-
-  buttonsContainer: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 16,
-    marginTop: 30,
-  },
-
   slide: {
-    height: 500,
+    height: 420,
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 32,
+    gap: 20,
   },
-  slideText: {
+  iconWrapper: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  slideTitle: {
     fontSize: 24,
     fontWeight: "700",
     color: "#fff",
+    textAlign: "center",
   },
-  image: {
-    width: "100%",
-    height: 150,
-    borderRadius: 8,
-    marginBottom: 10,
+  slideDescription: {
+    fontSize: 15,
+    color: "rgba(255,255,255,0.9)",
+    textAlign: "center",
+    lineHeight: 22,
+  },
+  buttonsContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 12,
+    marginTop: 32,
+    paddingBottom: 24,
   },
 });

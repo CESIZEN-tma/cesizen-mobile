@@ -37,7 +37,6 @@ const Register = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const validateForm = () => {
     const newErrors = {
@@ -94,7 +93,10 @@ const Register = () => {
           firstName: formData.firstName,
           lastName: formData.lastName,
         });
-        setRegistrationSuccess(true);
+        router.replace({
+          pathname: "/(auth)/login",
+          params: { notice: "Votre compte a été créé. Confirmez votre email avant de vous connecter." },
+        } as any);
       } catch (error: any) {
         console.error("Registration failed:", error);
         const errorMessage =
@@ -109,44 +111,6 @@ const Register = () => {
     }
   };
 
-  if (registrationSuccess) {
-    return (
-      <View
-        style={[
-          styles.container,
-          styles.successContainer,
-          { backgroundColor: colors.background },
-        ]}
-      >
-        <Ionicons
-          name="checkmark-circle"
-          size={80}
-          color={colors.primary}
-          style={styles.successIcon}
-        />
-        <Text style={[styles.successTitle, { color: colors.text }]}>
-          Inscription réussie !
-        </Text>
-        <Text style={[styles.successMessage, { color: colors.textSecondary }]}>
-          Un email de confirmation a été envoyé à{" "}
-          <Text style={{ fontWeight: "600", color: colors.text }}>
-            {formData.email}
-          </Text>
-        </Text>
-        <Text style={[styles.successInstructions, { color: colors.textSecondary }]}>
-          Veuillez vérifier votre boîte mail et cliquer sur le lien de
-          confirmation pour activer votre compte.
-        </Text>
-        <PressButton
-          label="Retour à la connexion"
-          onPress={() => router.replace("/(auth)/login")}
-          width={300}
-          height={50}
-        />
-      </View>
-    );
-  }
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -158,7 +122,7 @@ const Register = () => {
       >
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.back()}
+          onPress={() => router.replace("/(tabs)")}
         >
           <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
@@ -321,31 +285,5 @@ const styles = StyleSheet.create({
   footerLink: {
     fontSize: 14,
     fontWeight: "600",
-  },
-  successContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 40,
-  },
-  successIcon: {
-    marginBottom: 24,
-  },
-  successTitle: {
-    fontSize: 28,
-    fontWeight: "700",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  successMessage: {
-    fontSize: 16,
-    marginBottom: 16,
-    textAlign: "center",
-    lineHeight: 24,
-  },
-  successInstructions: {
-    fontSize: 14,
-    marginBottom: 40,
-    textAlign: "center",
-    lineHeight: 20,
   },
 });
