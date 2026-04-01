@@ -32,6 +32,13 @@ const mapBookmarkDtoToModel = (dto: BookmarkDTO): Bookmark => {
 };
 
 export const configurationApi = {
+  getAdminConfigurations: async (): Promise<Configuration[]> => {
+    const response = await apiClient.get<ConfigurationDTO[]>(
+      ENDPOINTS.CONFIGURATIONS.GET_ALL
+    );
+    return response.map(mapConfigurationDtoToModel);
+  },
+
   getMyConfigurations: async (): Promise<Configuration[]> => {
     const response = await apiClient.get<ConfigurationDTO[]>(
       ENDPOINTS.USER_CONFIGURATIONS.GET_ALL

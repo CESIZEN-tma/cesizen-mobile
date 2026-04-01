@@ -22,17 +22,20 @@ export default function DashboardScreen() {
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
   const {
+    adminConfigurations,
     myConfigurations,
     bookmarks,
     isLoading,
     addBookmark,
     removeBookmark,
     isBookmarked,
+    refreshAdminConfigurations,
     refreshMyConfigurations,
   } = useConfiguration();
 
   useEffect(() => {
     if (isAuthenticated) {
+      refreshAdminConfigurations();
       refreshMyConfigurations();
     }
   }, [isAuthenticated]);
@@ -100,7 +103,7 @@ export default function DashboardScreen() {
     },
   ];
 
-  const recentConfigurations = myConfigurations.slice(0, 3);
+  const recentAdminConfigurations = adminConfigurations.slice(0, 3);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -185,11 +188,11 @@ export default function DashboardScreen() {
               <View style={styles.loaderContainer}>
                 <Loader size={40} />
               </View>
-            ) : recentConfigurations.length > 0 ? (
+            ) : recentAdminConfigurations.length > 0 ? (
               <View style={styles.recentSection}>
                 <View style={styles.sectionHeader}>
                   <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                    Mes configurations récentes
+                    Configurations populaires
                   </Text>
                   <TouchableOpacity
                     onPress={() => router.push('/(tabs)/library' as any)}
@@ -199,7 +202,7 @@ export default function DashboardScreen() {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                {recentConfigurations.map((config) => (
+                {recentAdminConfigurations.map((config) => (
                   <ConfigurationCard
                     key={config.id}
                     configuration={config}
@@ -209,7 +212,7 @@ export default function DashboardScreen() {
                   />
                 ))}
               </View>
-            ) : (
+            ) : myConfigurations.length === 0 ? (
               <View style={styles.emptyState}>
                 <Ionicons
                   name="add-circle-outline"
@@ -229,7 +232,7 @@ export default function DashboardScreen() {
                   <Text style={styles.emptyButtonText}>Passer un quiz</Text>
                 </TouchableOpacity>
               </View>
-            )}
+            ) : null}
           </>
         )}
 

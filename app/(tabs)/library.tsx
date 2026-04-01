@@ -17,10 +17,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Configuration } from '@/types/api.types';
 
+type ActiveTab = 'public' | 'mine' | 'bookmarks';
+
 export default function LibraryScreen() {
   const { colors } = useTheme();
   const router = useRouter();
   const {
+    adminConfigurations,
     myConfigurations,
     bookmarks,
     isLoading,
@@ -30,7 +33,7 @@ export default function LibraryScreen() {
     isBookmarked,
   } = useConfiguration();
 
-  const [activeTab, setActiveTab] = useState<'my' | 'bookmarks'>('my');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('public');
 
   const handleEdit = (id: string) => {
     router.push(`/(tabs)/configurations/${id}/edit` as any);
@@ -49,10 +52,7 @@ export default function LibraryScreen() {
             try {
               await deleteConfiguration(id);
             } catch (error) {
-              Alert.alert(
-                'Erreur',
-                'Impossible de supprimer la configuration'
-              );
+              Alert.alert('Erreur', 'Impossible de supprimer la configuration');
             }
           },
         },
@@ -78,7 +78,41 @@ export default function LibraryScreen() {
 
   const getBookmarkedConfigurations = (): Configuration[] => {
     const bookmarkedIds = bookmarks.map((b) => b.configurationId);
-    return myConfigurations.filter((c) => bookmarkedIds.includes(c.id));
+    return adminConfigurations.filter((c) => bookmarkedIds.includes(c.id));
+  };
+
+  const getConfigurations = (): Configuration[] => {
+    switch (activeTab) {
+      case 'public':
+        return adminConfigurations;
+      case 'mine':
+        return myConfigurations;
+      case 'bookmarks':
+        return getBookmarkedConfigurations();
+    }
+  };
+
+  const getEmptyMessage = (): { title: string; subtitle: string; icon: string } => {
+    switch (activeTab) {
+      case 'public':
+        return {
+          icon: 'grid-outline',
+          title: 'Aucune configuration',
+          subtitle: 'Aucune configuration publique disponible',
+        };
+      case 'mine':
+        return {
+          icon: 'add-circle-outline',
+          title: 'Aucune configuration',
+          subtitle: 'Créez votre première configuration personnalisée',
+        };
+      case 'bookmarks':
+        return {
+          icon: 'bookmark-outline',
+          title: 'Aucun favori',
+          subtitle: 'Ajoutez des configurations publiques à vos favoris',
+        };
+    }
   };
 
   const renderContent = () => {
@@ -90,26 +124,16 @@ export default function LibraryScreen() {
       );
     }
 
-    const configurations =
-      activeTab === 'my' ? myConfigurations : getBookmarkedConfigurations();
+    const configurations = getConfigurations();
 
     if (configurations.length === 0) {
+      const { icon, title, subtitle } = getEmptyMessage();
       return (
         <View style={styles.emptyContainer}>
-          <Ionicons
-            name={activeTab === 'my' ? 'add-circle-outline' : 'bookmark-outline'}
-            size={80}
-            color={colors.textSecondary}
-          />
-          <Text style={[styles.emptyTitle, { color: colors.text }]}>
-            {activeTab === 'my'
-              ? 'Aucune configuration'
-              : 'Aucun favori'}
-          </Text>
+          <Ionicons name={icon as any} size={80} color={colors.textSecondary} />
+          <Text style={[styles.emptyTitle, { color: colors.text }]}>{title}</Text>
           <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
-            {activeTab === 'my'
-              ? 'Créez votre première configuration personnalisée'
-              : 'Ajoutez des configurations à vos favoris'}
+            {subtitle}
           </Text>
         </View>
       );
@@ -125,9 +149,9 @@ export default function LibraryScreen() {
           <ConfigurationCard
             key={config.id}
             configuration={config}
-            onEdit={activeTab === 'my' ? handleEdit : undefined}
-            onDelete={activeTab === 'my' ? handleDelete : undefined}
-            onBookmark={handleBookmark}
+            onEdit={activeTab === 'mine' ? handleEdit : undefined}
+            onDelete={activeTab === 'mine' ? handleDelete : undefined}
+            onBookmark={activeTab !== 'mine' ? handleBookmark : undefined}
             isBookmarked={isBookmarked(config.id)}
             showActions={true}
           />
@@ -135,6 +159,12 @@ export default function LibraryScreen() {
       </ScrollView>
     );
   };
+
+  const tabs: { key: ActiveTab; label: string }[] = [
+    { key: 'public', label: 'Publiques' },
+    { key: 'mine', label: 'Mes configs' },
+    { key: 'bookmarks', label: 'Favoris' },
+  ];
 
   return (
     <AuthGuard requireAuth={true}>
@@ -144,66 +174,49 @@ export default function LibraryScreen() {
             <Text style={[styles.title, { color: colors.text }]}>
               Bibliothèque
             </Text>
-            <TouchableOpacity
-              style={[styles.headerButton, { backgroundColor: colors.primary }]}
-              onPress={handleCreateNew}
-            >
-              <Ionicons name="add" size={20} color="#ffffff" />
-            </TouchableOpacity>
+            {activeTab === 'mine' && (
+              <TouchableOpacity
+                style={[styles.headerButton, { backgroundColor: colors.primary }]}
+                onPress={handleCreateNew}
+              >
+                <Ionicons name="add" size={20} color="#ffffff" />
+              </TouchableOpacity>
+            )}
           </View>
 
-        <View style={styles.tabsContainer}>
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              activeTab === 'my' && {
-                borderBottomColor: colors.primary,
-                borderBottomWidth: 2,
-              },
-            ]}
-            onPress={() => setActiveTab('my')}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                {
-                  color: activeTab === 'my' ? colors.primary : colors.textSecondary,
-                  fontWeight: activeTab === 'my' ? '600' : '400',
-                },
-              ]}
-            >
-              Mes Configs
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.tab,
-              activeTab === 'bookmarks' && {
-                borderBottomColor: colors.primary,
-                borderBottomWidth: 2,
-              },
-            ]}
-            onPress={() => setActiveTab('bookmarks')}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                {
-                  color:
-                    activeTab === 'bookmarks'
-                      ? colors.primary
-                      : colors.textSecondary,
-                  fontWeight: activeTab === 'bookmarks' ? '600' : '400',
-                },
-              ]}
-            >
-              Favoris
-            </Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.tabsContainer}>
+            {tabs.map((tab) => (
+              <TouchableOpacity
+                key={tab.key}
+                style={[
+                  styles.tab,
+                  activeTab === tab.key && {
+                    borderBottomColor: colors.primary,
+                    borderBottomWidth: 2,
+                  },
+                ]}
+                onPress={() => setActiveTab(tab.key)}
+              >
+                <Text
+                  style={[
+                    styles.tabText,
+                    {
+                      color:
+                        activeTab === tab.key
+                          ? colors.primary
+                          : colors.textSecondary,
+                      fontWeight: activeTab === tab.key ? '600' : '400',
+                    },
+                  ]}
+                >
+                  {tab.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
-        {renderContent()}
-      </View>
+          {renderContent()}
+        </View>
       </PageLayout>
     </AuthGuard>
   );
@@ -225,10 +238,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '700',
   },
-  headerButtons: {
-    flexDirection: 'row',
-    gap: 8,
-  },
   headerButton: {
     width: 40,
     height: 40,
@@ -248,7 +257,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabText: {
-    fontSize: 16,
+    fontSize: 14,
   },
   centerContainer: {
     flex: 1,

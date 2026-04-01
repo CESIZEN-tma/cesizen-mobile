@@ -10,10 +10,12 @@ import { configurationApi } from '@/app/services/api/configurationApi';
 import { CreateConfigurationRequestDTO, UpdateConfigurationRequestDTO } from '@/app/services/api/types';
 
 type ConfigurationContextType = {
+  adminConfigurations: Configuration[];
   myConfigurations: Configuration[];
   bookmarks: Bookmark[];
   isLoading: boolean;
   error: string | null;
+  refreshAdminConfigurations: () => Promise<void>;
   refreshMyConfigurations: () => Promise<void>;
   refreshBookmarks: () => Promise<void>;
   createConfiguration: (data: CreateConfigurationRequestDTO) => Promise<Configuration>;
@@ -27,10 +29,25 @@ type ConfigurationContextType = {
 const ConfigurationContext = createContext<ConfigurationContextType | undefined>(undefined);
 
 export function ConfigurationProvider({ children }: { children: ReactNode }) {
+  const [adminConfigurations, setAdminConfigurations] = useState<Configuration[]>([]);
   const [myConfigurations, setMyConfigurations] = useState<Configuration[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const refreshAdminConfigurations = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const configs = await configurationApi.getAdminConfigurations();
+      setAdminConfigurations(configs);
+    } catch (err: any) {
+      console.error('Failed to load admin configurations:', err);
+      setError(err.message || 'Erreur lors du chargement des configurations');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const refreshMyConfigurations = async () => {
     try {
@@ -120,7 +137,7 @@ export function ConfigurationProvider({ children }: { children: ReactNode }) {
       await refreshBookmarks();
     } catch (err: any) {
       console.error('Failed to add bookmark:', err);
-      setError(err.message || 'Erreur lors de l\'ajout aux favoris');
+      setError(err.message || "Erreur lors de l'ajout aux favoris");
       throw err;
     } finally {
       setIsLoading(false);
@@ -149,10 +166,12 @@ export function ConfigurationProvider({ children }: { children: ReactNode }) {
   return (
     <ConfigurationContext.Provider
       value={{
+        adminConfigurations,
         myConfigurations,
         bookmarks,
         isLoading,
         error,
+        refreshAdminConfigurations,
         refreshMyConfigurations,
         refreshBookmarks,
         createConfiguration,
