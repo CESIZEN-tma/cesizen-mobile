@@ -26,8 +26,8 @@ const mapConfigurationDtoToModel = (dto: ConfigurationDTO): Configuration => {
 
 const mapBookmarkDtoToModel = (dto: BookmarkDTO): Bookmark => {
   return {
-    id: dto.id,
-    configurationId: dto.idConfigurations,
+    id: dto.userId,
+    configurationId: dto.configurationId,
   };
 };
 

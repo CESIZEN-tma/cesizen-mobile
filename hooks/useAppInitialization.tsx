@@ -9,7 +9,7 @@ type InitializationStep = {
 
 export const useAppInitialization = () => {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { refreshMyConfigurations, refreshBookmarks } = useConfiguration();
+  const { refreshAdminConfigurations, refreshMyConfigurations, refreshBookmarks } = useConfiguration();
 
   const [isInitializing, setIsInitializing] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -26,13 +26,20 @@ export const useAppInitialization = () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
       setProgress(30);
 
+      setCurrentStep("Chargement des configurations...");
+      try {
+        await refreshAdminConfigurations();
+      } catch (error) {
+      }
+      setProgress(50);
+
       if (isAuthenticatedRef.current) {
         setCurrentStep("Chargement de vos configurations...");
         try {
           await refreshMyConfigurations();
         } catch (error) {
         }
-        setProgress(60);
+        setProgress(70);
 
         setCurrentStep("Chargement de vos favoris...");
         try {
@@ -55,7 +62,7 @@ export const useAppInitialization = () => {
       setProgress(100);
       setIsInitializing(false);
     }
-  }, [refreshMyConfigurations, refreshBookmarks]);
+  }, [refreshAdminConfigurations, refreshMyConfigurations, refreshBookmarks]);
 
   useEffect(() => {
     if (!authLoading && !hasInitialized.current) {

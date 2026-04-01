@@ -48,11 +48,6 @@ export default function ProfileScreen() {
       onPress: () => router.push('/(tabs)/profile/change-password' as any),
     },
     {
-      icon: 'phone-portrait-outline',
-      label: 'Sessions actives',
-      onPress: () => router.push('/(tabs)/profile/sessions' as any),
-    },
-    {
       icon: 'settings-outline',
       label: 'Paramètres',
       onPress: () => router.push('/(tabs)/profile/settings' as any),

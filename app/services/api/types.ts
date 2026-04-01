@@ -133,8 +133,10 @@ export interface UpdateConfigurationRequestDTO {
 }
 
 export interface BookmarkDTO {
-  id: string;
-  idConfigurations: string;
+  userId: string;
+  configurationId: string;
+  configurationName: string;
+  creationTime: string;
 }
 
 export interface AddBookmarkRequestDTO {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useTheme } from "@/hooks/themeHooks";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,6 +16,7 @@ export default function QuizTakingScreen() {
   const { colors } = useTheme();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const {
     quizState,
@@ -172,7 +174,7 @@ export default function QuizTakingScreen() {
         />
       </View>
 
-      <View style={styles.navigationContainer}>
+      <View style={[styles.navigationContainer, { paddingBottom: 24 + insets.bottom }]}>
         <TouchableOpacity
           onPress={goToPreviousQuestion}
           disabled={!canGoPrevious}
