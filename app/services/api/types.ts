@@ -150,11 +150,12 @@ export interface InformationPageDTO {
   content: string;
   contentType: string;
   status: string;
+  tagIds: string[];
 }
 
 export interface InformationTagDTO {
   id: string;
-  name: string;
+  label: string;
 }
 
 export interface NavigationMenuDTO {

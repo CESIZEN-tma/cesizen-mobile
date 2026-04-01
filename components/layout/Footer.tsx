@@ -32,6 +32,12 @@ const navItems: NavItem[] = [
     matchPaths: ["/library", "/(tabs)/library"]
   },
   {
+    icon: "newspaper-outline",
+    activeIcon: "newspaper",
+    route: "/(tabs)/resources",
+    matchPaths: ["/resources", "/(tabs)/resources"]
+  },
+  {
     icon: "person-outline",
     activeIcon: "person",
     route: "/(tabs)/profile",

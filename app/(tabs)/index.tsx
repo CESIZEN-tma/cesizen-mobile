@@ -95,12 +95,12 @@ export default function DashboardScreen() {
         }
       },
     },
-    {
+    ...(!isAuthenticated ? [{
       icon: 'information-circle',
       label: "Voir l'onboarding",
       color: '#8b5cf6',
       onPress: () => router.push('/(auth)/firstOpenedPage' as any),
-    },
+    }] : []),
   ];
 
   const recentAdminConfigurations = adminConfigurations.slice(0, 3);

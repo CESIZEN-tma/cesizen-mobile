@@ -42,7 +42,7 @@ export function ConfigurationProvider({ children }: { children: ReactNode }) {
       const configs = await configurationApi.getAdminConfigurations();
       setAdminConfigurations(configs);
     } catch (err: any) {
-      console.error('Failed to load admin configurations:', err);
+      console.error('Failed to load public configurations:', err);
       setError(err.message || 'Erreur lors du chargement des configurations');
     } finally {
       setIsLoading(false);
