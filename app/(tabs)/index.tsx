@@ -11,6 +11,7 @@ import PageLayout from '@/components/PageLayout';
 import { useTheme } from '@/hooks/themeHooks';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfiguration } from '@/hooks/useConfiguration';
+import { useSimplifiedMode } from '@/hooks/useSimplifiedMode';
 import ConfigurationCard from '@/components/configurations/ConfigurationCard';
 import Loader from '@/components/shared/Loader';
 import PressButton from '@/components/shared/PressButton';
@@ -20,6 +21,7 @@ import { useRouter } from 'expo-router';
 export default function DashboardScreen() {
   const { colors } = useTheme();
   const { user, isAuthenticated } = useAuth();
+  const { isSimplified, isLoaded: simplifiedLoaded } = useSimplifiedMode();
   const router = useRouter();
   const {
     adminConfigurations,
@@ -111,6 +113,76 @@ export default function DashboardScreen() {
     if (hour < 18) return 'Bon après-midi';
     return 'Bonsoir';
   };
+
+  if (simplifiedLoaded && isAuthenticated && isSimplified) {
+    return (
+      <PageLayout header footer>
+        <ScrollView
+          style={[styles.container, { backgroundColor: colors.background }]}
+          contentContainerStyle={styles.simplifiedContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.simplifiedGreeting}>
+            <Text style={[styles.simplifiedHello, { color: colors.textSecondary }]}>
+              {getGreeting()},
+            </Text>
+            <Text style={[styles.simplifiedName, { color: colors.text }]}>
+              {user?.firstName}
+            </Text>
+          </View>
+
+          <View style={[styles.simplifiedCard, { backgroundColor: colors.surface }]}>
+            <View style={[styles.simplifiedIconCircle, { backgroundColor: colors.primary + '20' }]}>
+              <Ionicons name="fitness-outline" size={48} color={colors.primary} />
+            </View>
+            <Text style={[styles.simplifiedCardTitle, { color: colors.text }]}>
+              Exercice de respiration
+            </Text>
+            <Text style={[styles.simplifiedCardSub, { color: colors.textSecondary }]}>
+              Prenez un moment pour vous recentrer
+            </Text>
+            <TouchableOpacity
+              style={[styles.simplifiedStartButton, { backgroundColor: colors.primary }]}
+              onPress={() => router.push('/(tabs)/library' as any)}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="play" size={20} color="#ffffff" />
+              <Text style={styles.simplifiedStartText}>Commencer</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.simplifiedActions}>
+            <TouchableOpacity
+              style={[styles.simplifiedAction, { backgroundColor: colors.surface }]}
+              onPress={() => router.push('/(tabs)/quizzes' as any)}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="clipboard-outline" size={24} color={colors.primary} />
+              <Text style={[styles.simplifiedActionLabel, { color: colors.text }]}>Quiz</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.simplifiedAction, { backgroundColor: colors.surface }]}
+              onPress={() => router.push('/(tabs)/resources' as any)}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="newspaper-outline" size={24} color={colors.primary} />
+              <Text style={[styles.simplifiedActionLabel, { color: colors.text }]}>Ressources</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.simplifiedAction, { backgroundColor: colors.surface }]}
+              onPress={() => router.push('/(tabs)/library' as any)}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="library-outline" size={24} color={colors.primary} />
+              <Text style={[styles.simplifiedActionLabel, { color: colors.text }]}>Configs</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout header footer>
@@ -387,5 +459,85 @@ const styles = StyleSheet.create({
   tipText: {
     fontSize: 14,
     lineHeight: 20,
+  },
+  simplifiedContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+    gap: 28,
+  },
+  simplifiedGreeting: {
+    alignItems: 'center',
+  },
+  simplifiedHello: {
+    fontSize: 18,
+  },
+  simplifiedName: {
+    fontSize: 32,
+    fontWeight: '700',
+    marginTop: 2,
+  },
+  simplifiedCard: {
+    borderRadius: 20,
+    padding: 28,
+    alignItems: 'center',
+    gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  simplifiedIconCircle: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
+  simplifiedCardTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  simplifiedCardSub: {
+    fontSize: 15,
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  simplifiedStartButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 14,
+  },
+  simplifiedStartText: {
+    color: '#ffffff',
+    fontSize: 17,
+    fontWeight: '700',
+  },
+  simplifiedActions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  simplifiedAction: {
+    flex: 1,
+    borderRadius: 14,
+    paddingVertical: 18,
+    alignItems: 'center',
+    gap: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  simplifiedActionLabel: {
+    fontSize: 13,
+    fontWeight: '600',
   },
 });

@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity, Switch } from 'react-native';
 import PageLayout from '@/components/PageLayout';
 import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
+import { useSimplifiedMode } from '@/hooks/useSimplifiedMode';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 export default function SettingsScreen() {
   const { colors, theme, toggleTheme } = useTheme();
+  const { isSimplified, toggle: toggleSimplified } = useSimplifiedMode();
   const router = useRouter();
 
   const isDarkMode = theme === 'dark';
@@ -61,6 +63,32 @@ export default function SettingsScreen() {
               <Switch
                 value={isDarkMode}
                 onValueChange={toggleTheme}
+                trackColor={{ false: '#d1d5db', true: colors.primary }}
+                thumbColor="#ffffff"
+              />
+            </View>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              Affichage
+            </Text>
+
+            <View style={[styles.settingItem, { backgroundColor: colors.surface }]}>
+              <View style={styles.settingLeft}>
+                <Ionicons name="grid-outline" size={24} color={colors.text} />
+                <View style={styles.settingText}>
+                  <Text style={[styles.settingLabel, { color: colors.text }]}>
+                    Mode simplifié
+                  </Text>
+                  <Text style={[styles.settingDescription, { color: colors.textSecondary }]}>
+                    Affiche une page d'accueil épurée centrée sur la respiration
+                  </Text>
+                </View>
+              </View>
+              <Switch
+                value={isSimplified}
+                onValueChange={toggleSimplified}
                 trackColor={{ false: '#d1d5db', true: colors.primary }}
                 thumbColor="#ffffff"
               />
