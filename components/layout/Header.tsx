@@ -96,7 +96,7 @@ const Header = ({ onMenuPress }: HeaderProps) => {
       </View>
     </Animated.View>
 
-    <SlideInMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+    <SlideInMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)}  />
   </>
   );
 };
