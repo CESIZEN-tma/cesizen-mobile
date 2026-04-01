@@ -154,6 +154,7 @@ export default function LibraryScreen() {
             onBookmark={activeTab !== 'mine' ? handleBookmark : undefined}
             isBookmarked={isBookmarked(config.id)}
             showActions={true}
+            publicConfig={activeTab === "public"}
           />
         ))}
       </ScrollView>

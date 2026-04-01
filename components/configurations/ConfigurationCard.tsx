@@ -12,6 +12,7 @@ interface ConfigurationCardProps {
   onBookmark?: (id: string) => void;
   isBookmarked?: boolean;
   showActions?: boolean;
+  publicConfig?: boolean;
 }
 
 export default function ConfigurationCard({
@@ -21,12 +22,13 @@ export default function ConfigurationCard({
   onBookmark,
   isBookmarked = false,
   showActions = true,
+  publicConfig = false
 }: ConfigurationCardProps) {
   const { colors } = useTheme();
   const router = useRouter();
 
   const handleStart = () => {
-    router.push(`/(tabs)/exercise/${configuration.id}` as any);
+    router.push(`/(tabs)/exercise/${configuration.id}${ publicConfig ? "?isPublicConfig=true" : ""}` as any);
   };
 
   const renderDifficulty = () => {

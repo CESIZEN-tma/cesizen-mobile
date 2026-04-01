@@ -281,6 +281,7 @@ export default function DashboardScreen() {
                     onBookmark={handleBookmark}
                     isBookmarked={isBookmarked(config.id)}
                     showActions={true}
+                    publicConfig={true}
                   />
                 ))}
               </View>

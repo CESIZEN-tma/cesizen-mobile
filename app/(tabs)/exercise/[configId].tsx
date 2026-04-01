@@ -1,25 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useTheme } from '@/hooks/themeHooks';
-import { apiClient } from '@/app/services/api/apiClient';
-import { ENDPOINTS } from '@/app/services/api/endpoints';
-import { Configuration } from '@/types/api.types';
-import { useBreathingExercise } from '@/hooks/useBreathingExercise';
-import BreathingCircle from '@/components/exercise/BreathingCircle';
-import PhaseIndicator from '@/components/exercise/PhaseIndicator';
-import ExerciseControls from '@/components/exercise/ExerciseControls';
-import CompletionScreen from '@/components/exercise/CompletionScreen';
-import Loader from '@/components/shared/Loader';
-import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useTheme } from "@/hooks/themeHooks";
+import { apiClient } from "@/app/services/api/apiClient";
+import { ENDPOINTS } from "@/app/services/api/endpoints";
+import { Configuration } from "@/types/api.types";
+import { useBreathingExercise } from "@/hooks/useBreathingExercise";
+import BreathingCircle from "@/components/exercise/BreathingCircle";
+import PhaseIndicator from "@/components/exercise/PhaseIndicator";
+import ExerciseControls from "@/components/exercise/ExerciseControls";
+import CompletionScreen from "@/components/exercise/CompletionScreen";
+import Loader from "@/components/shared/Loader";
+import { Ionicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 
 export default function ExerciseScreen() {
   const { colors } = useTheme();
   const router = useRouter();
-  const { configId } = useLocalSearchParams<{ configId: string }>();
+  const { configId, isPublicConfig } = useLocalSearchParams<{
+    configId: string;
+    isPublicConfig?: string;
+  }>();
 
-  const [configuration, setConfiguration] = useState<Configuration | null>(null);
+  const [configuration, setConfiguration] = useState<Configuration | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,13 +43,15 @@ export default function ExerciseScreen() {
 
     try {
       setIsLoading(true);
-      const config = await apiClient.get(
-        ENDPOINTS.USER_CONFIGURATIONS.GET_BY_ID(configId)
-      );
+      const config = isPublicConfig
+        ? await apiClient.get(ENDPOINTS.CONFIGURATIONS.GET_BY_ID(configId))
+        : await apiClient.get(
+            ENDPOINTS.USER_CONFIGURATIONS.GET_BY_ID(configId),
+          );
       setConfiguration(config);
     } catch (err: any) {
-      console.error('Failed to load configuration:', err);
-      setError('Impossible de charger la configuration.');
+      console.error("Failed to load configuration:", err);
+      setError("Impossible de charger la configuration.");
     } finally {
       setIsLoading(false);
     }
@@ -60,27 +73,21 @@ export default function ExerciseScreen() {
         durationMinutes: 5,
       };
 
-  const {
-    state,
-    togglePlayPause,
-    stop,
-    getPhaseLabel,
-    progress,
-    isCompleted,
-  } = useBreathingExercise(exerciseConfig);
+  const { state, togglePlayPause, stop, getPhaseLabel, progress, isCompleted } =
+    useBreathingExercise(exerciseConfig);
 
   useEffect(() => {
     if (state.isPlaying && !state.isPaused) {
       if (
         Math.ceil(state.phaseTimeRemaining) ===
         Math.ceil(
-          state.currentPhase === 'inhale'
+          state.currentPhase === "inhale"
             ? exerciseConfig.inhalation
-            : state.currentPhase === 'retention1'
-            ? exerciseConfig.retention1
-            : state.currentPhase === 'exhale'
-            ? exerciseConfig.exhalation
-            : exerciseConfig.retention2
+            : state.currentPhase === "retention1"
+              ? exerciseConfig.retention1
+              : state.currentPhase === "exhale"
+                ? exerciseConfig.exhalation
+                : exerciseConfig.retention2,
         )
       ) {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -119,10 +126,10 @@ export default function ExerciseScreen() {
           <Ionicons
             name="alert-circle"
             size={60}
-            color={colors.error || '#ef4444'}
+            color={colors.error || "#ef4444"}
           />
           <Text style={[styles.errorText, { color: colors.text }]}>
-            {error || 'Configuration introuvable'}
+            {error || "Configuration introuvable"}
           </Text>
           <TouchableOpacity onPress={() => router.back()}>
             <Text style={[styles.backText, { color: colors.primary }]}>
@@ -202,14 +209,14 @@ const styles = StyleSheet.create({
   },
   centerContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: 16,
     paddingHorizontal: 40,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 24,
     paddingTop: 60,
     paddingBottom: 16,
@@ -220,31 +227,31 @@ const styles = StyleSheet.create({
   },
   configName: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     flex: 1,
   },
   content: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: "space-around",
     paddingHorizontal: 24,
     paddingVertical: 40,
   },
   circleContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   phaseContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   controlsContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   errorText: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 16,
   },
   backText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
