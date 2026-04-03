@@ -1,4 +1,5 @@
 import { useTheme } from "@/hooks/themeHooks";
+import { useAuth } from "@/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import { usePathname, useRouter } from "expo-router";
 import React, { useEffect } from "react";
@@ -10,6 +11,7 @@ type NavItem = {
   activeIcon: keyof typeof Ionicons.glyphMap;
   route: string;
   matchPaths: string[];
+  authNeeded?: boolean;
 };
 
 const navItems: NavItem[] = [
@@ -29,7 +31,8 @@ const navItems: NavItem[] = [
     icon: "library-outline",
     activeIcon: "library",
     route: "/(tabs)/library",
-    matchPaths: ["/library", "/(tabs)/library"]
+    matchPaths: ["/library", "/(tabs)/library"],
+    authNeeded: true
   },
   {
     icon: "newspaper-outline",
@@ -41,7 +44,8 @@ const navItems: NavItem[] = [
     icon: "person-outline",
     activeIcon: "person",
     route: "/(tabs)/profile",
-    matchPaths: ["/profile", "/(tabs)/profile"]
+    matchPaths: ["/profile", "/(tabs)/profile"],
+    authNeeded: true
   },
 ];
 
@@ -50,6 +54,7 @@ const isRouteActive = (pathname: string, item: NavItem): boolean => {
 };
 
 const Footer = () => {
+  const { isAuthenticated } = useAuth();
   const { colors } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
@@ -69,6 +74,7 @@ const Footer = () => {
       ]}
     >
       {navItems.map((item, index) => {
+        if(item.authNeeded && !isAuthenticated) return null;
         const isActive = isRouteActive(pathname, item);
         return (
           <TouchableOpacity
