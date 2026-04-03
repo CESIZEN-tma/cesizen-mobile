@@ -1,0 +1,94 @@
+import { useConfiguration } from "@/hooks/useConfiguration";
+import { useAuth } from "@/hooks/useAuth";
+import secureStoreService from "@/app/services/secureStore.service";
+import { useState, useEffect, useCallback, useRef } from "react";
+
+const CONFIRMATION_TTL_MS = 15 * 60 * 1000;
+
+type InitializationStep = {
+  name: string;
+  progress: number;
+};
+
+export const useAppInitialization = () => {
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { refreshAdminConfigurations, refreshMyConfigurations, refreshBookmarks } = useConfiguration();
+
+  const [isInitializing, setIsInitializing] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState("Initialisation...");
+  const [hasPendingConfirmation, setHasPendingConfirmation] = useState(false);
+  const hasInitialized = useRef(false);
+  const isAuthenticatedRef = useRef(isAuthenticated);
+  isAuthenticatedRef.current = isAuthenticated;
+
+  const initialize = useCallback(async () => {
+    try {
+      setProgress(10);
+      setCurrentStep("Chargement de l'application...");
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setProgress(30);
+
+      setCurrentStep("Chargement des configurations...");
+      try {
+        await refreshAdminConfigurations();
+      } catch (error) {
+      }
+      setProgress(50);
+
+      if (isAuthenticatedRef.current) {
+        setCurrentStep("Chargement de vos configurations...");
+        try {
+          await refreshMyConfigurations();
+        } catch (error) {
+        }
+        setProgress(70);
+
+        setCurrentStep("Chargement de vos favoris...");
+        try {
+          await refreshBookmarks();
+        } catch (error) {
+        }
+        setProgress(90);
+      } else {
+        setProgress(90);
+      }
+
+      setCurrentStep("Finalisation...");
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setProgress(100);
+
+      const pendingAt = await secureStoreService.getItem('pendingConfirmationAt');
+      if (pendingAt) {
+        const elapsed = Date.now() - parseInt(pendingAt, 10);
+        if (elapsed < CONFIRMATION_TTL_MS) {
+          setHasPendingConfirmation(true);
+        } else {
+          await secureStoreService.removeItem('pendingConfirmationAt');
+        }
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      setIsInitializing(false);
+    } catch (error) {
+      console.error("Initialization error:", error);
+      setProgress(100);
+      setIsInitializing(false);
+    }
+  }, [refreshAdminConfigurations, refreshMyConfigurations, refreshBookmarks]);
+
+  useEffect(() => {
+    if (!authLoading && !hasInitialized.current) {
+      hasInitialized.current = true;
+      initialize();
+    }
+  }, [authLoading, initialize]);
+
+  return {
+    isInitializing,
+    progress,
+    currentStep,
+    hasPendingConfirmation,
+  };
+};
