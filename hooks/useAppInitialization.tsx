@@ -1,6 +1,9 @@
 import { useConfiguration } from "@/hooks/useConfiguration";
 import { useAuth } from "@/hooks/useAuth";
+import secureStoreService from "@/app/services/secureStore.service";
 import { useState, useEffect, useCallback, useRef } from "react";
+
+const CONFIRMATION_TTL_MS = 15 * 60 * 1000;
 
 type InitializationStep = {
   name: string;
@@ -14,6 +17,7 @@ export const useAppInitialization = () => {
   const [isInitializing, setIsInitializing] = useState(true);
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState("Initialisation...");
+  const [hasPendingConfirmation, setHasPendingConfirmation] = useState(false);
   const hasInitialized = useRef(false);
   const isAuthenticatedRef = useRef(isAuthenticated);
   isAuthenticatedRef.current = isAuthenticated;
@@ -55,6 +59,16 @@ export const useAppInitialization = () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
       setProgress(100);
 
+      const pendingAt = await secureStoreService.getItem('pendingConfirmationAt');
+      if (pendingAt) {
+        const elapsed = Date.now() - parseInt(pendingAt, 10);
+        if (elapsed < CONFIRMATION_TTL_MS) {
+          setHasPendingConfirmation(true);
+        } else {
+          await secureStoreService.removeItem('pendingConfirmationAt');
+        }
+      }
+
       await new Promise((resolve) => setTimeout(resolve, 200));
       setIsInitializing(false);
     } catch (error) {
@@ -75,5 +89,6 @@ export const useAppInitialization = () => {
     isInitializing,
     progress,
     currentStep,
+    hasPendingConfirmation,
   };
 };

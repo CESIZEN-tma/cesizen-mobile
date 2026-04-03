@@ -12,6 +12,7 @@ import { useTheme } from '@/hooks/themeHooks';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfiguration } from '@/hooks/useConfiguration';
 import { useSimplifiedMode } from '@/hooks/useSimplifiedMode';
+import { usePendingConfirmation } from '@/hooks/usePendingConfirmation';
 import ConfigurationCard from '@/components/configurations/ConfigurationCard';
 import Loader from '@/components/shared/Loader';
 import PressButton from '@/components/shared/PressButton';
@@ -22,6 +23,7 @@ export default function DashboardScreen() {
   const { colors } = useTheme();
   const { user, isAuthenticated } = useAuth();
   const { isSimplified, isLoaded: simplifiedLoaded } = useSimplifiedMode();
+  const { hasPendingConfirmation } = usePendingConfirmation();
   const router = useRouter();
   const {
     adminConfigurations,
@@ -122,6 +124,19 @@ export default function DashboardScreen() {
           contentContainerStyle={styles.simplifiedContent}
           showsVerticalScrollIndicator={false}
         >
+          {hasPendingConfirmation && (
+            <TouchableOpacity
+              style={[styles.pendingBanner, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]}
+              onPress={() => router.push('/(auth)/confirm-account' as any)}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="mail-outline" size={18} color={colors.primary} />
+              <Text style={[styles.pendingBannerText, { color: colors.primary }]}>
+                Il semblerait que vous ayez une inscription en attente de validation. Cliquez ici
+              </Text>
+            </TouchableOpacity>
+          )}
+
           <View style={styles.simplifiedGreeting}>
             <Text style={[styles.simplifiedHello, { color: colors.textSecondary }]}>
               {getGreeting()},
@@ -191,6 +206,19 @@ export default function DashboardScreen() {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
+        {hasPendingConfirmation && (
+          <TouchableOpacity
+            style={[styles.pendingBanner, { backgroundColor: colors.primary + '20', borderColor: colors.primary }]}
+            onPress={() => router.push('/(auth)/confirm-account' as any)}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="mail-outline" size={18} color={colors.primary} />
+            <Text style={[styles.pendingBannerText, { color: colors.primary }]}>
+              Il semblerait que vous ayez une inscription en attente de validation. Cliquez ici
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <View style={styles.welcomeSection}>
           <Text style={[styles.greeting, { color: colors.textSecondary }]}>
             {getGreeting()}
@@ -339,6 +367,23 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 24,
+  },
+  pendingBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginHorizontal: 16,
+    marginTop: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  pendingBannerText: {
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '500',
+    lineHeight: 18,
   },
   welcomeSection: {
     paddingHorizontal: 24,

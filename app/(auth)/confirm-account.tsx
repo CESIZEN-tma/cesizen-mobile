@@ -1,6 +1,7 @@
 import PressButton from "@/components/shared/PressButton";
 import TextInput from "@/components/shared/forms/TextInput";
 import { authApi } from "@/app/services/api/authApi";
+import secureStoreService from "@/app/services/secureStore.service";
 import { useTheme } from "@/hooks/themeHooks";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -31,6 +32,7 @@ const ConfirmAccount = () => {
 
     try {
       await authApi.confirmEmail(code.trim());
+      await secureStoreService.removeItem('pendingConfirmationAt');
       router.replace("/(auth)/login");
     } catch {
       setConfirmError("Erreur lors de la confirmation du compte");

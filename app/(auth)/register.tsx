@@ -2,6 +2,7 @@ import PressButton from "@/components/shared/PressButton";
 import TextInput from "@/components/shared/forms/TextInput";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/themeHooks";
+import secureStoreService from "@/app/services/secureStore.service";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -93,6 +94,7 @@ const Register = () => {
           firstName: formData.firstName,
           lastName: formData.lastName,
         });
+        await secureStoreService.setItem('pendingConfirmationAt', Date.now().toString());
         router.replace("/(auth)/confirm-account");
       } catch (error: any) {
         console.error("Registration failed:", error);
