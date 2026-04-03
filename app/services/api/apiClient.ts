@@ -86,7 +86,8 @@ async function fetchWithAuth(
     url.includes('/forgot-password') ||
     url.includes('/reset-password') ||
     url.includes('/content/') ||
-    url.includes('/configurations');
+    url.includes('/configurations') ||
+    url.includes('/confirm-account');
 
   if (response.status === 401 && !isPublicEndpoint) {
     if (!isRefreshing) {

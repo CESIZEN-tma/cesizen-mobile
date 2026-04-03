@@ -93,10 +93,7 @@ const Register = () => {
           firstName: formData.firstName,
           lastName: formData.lastName,
         });
-        router.replace({
-          pathname: "/(auth)/login",
-          params: { notice: "Votre compte a été créé. Confirmez votre email avant de vous connecter." },
-        } as any);
+        router.replace("/(auth)/confirm-account");
       } catch (error: any) {
         console.error("Registration failed:", error);
         const errorMessage =
