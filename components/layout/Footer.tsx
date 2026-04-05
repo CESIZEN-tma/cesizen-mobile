@@ -19,38 +19,39 @@ const navItems: NavItem[] = [
     icon: "home-outline",
     activeIcon: "home",
     route: "/(tabs)",
-    matchPaths: ["/", "/(tabs)", "/(tabs)/"]
+    matchPaths: ["/", "/(tabs)", "/(tabs)/"],
   },
   {
     icon: "list-outline",
     activeIcon: "list",
     route: "/(tabs)/quizzes",
-    matchPaths: ["/quizzes", "/(tabs)/quizzes"]
+    matchPaths: ["/quizzes", "/(tabs)/quizzes"],
   },
   {
     icon: "library-outline",
     activeIcon: "library",
     route: "/(tabs)/library",
     matchPaths: ["/library", "/(tabs)/library"],
-    authNeeded: true
   },
   {
     icon: "newspaper-outline",
     activeIcon: "newspaper",
     route: "/(tabs)/resources",
-    matchPaths: ["/resources", "/(tabs)/resources"]
+    matchPaths: ["/resources", "/(tabs)/resources"],
   },
   {
     icon: "person-outline",
     activeIcon: "person",
     route: "/(tabs)/profile",
     matchPaths: ["/profile", "/(tabs)/profile"],
-    authNeeded: true
+    authNeeded: true,
   },
 ];
 
 const isRouteActive = (pathname: string, item: NavItem): boolean => {
-  return item.matchPaths.some(path => pathname === path || pathname.startsWith(path + "/"));
+  return item.matchPaths.some(
+    (path) => pathname === path || pathname.startsWith(path + "/"),
+  );
 };
 
 const Footer = () => {
@@ -60,8 +61,7 @@ const Footer = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  useEffect(() => {
-  }, [pathname]);
+  useEffect(() => {}, [pathname]);
 
   return (
     <View
@@ -74,7 +74,7 @@ const Footer = () => {
       ]}
     >
       {navItems.map((item, index) => {
-        if(item.authNeeded && !isAuthenticated) return null;
+        if (item.authNeeded && !isAuthenticated) return null;
         const isActive = isRouteActive(pathname, item);
         return (
           <TouchableOpacity
