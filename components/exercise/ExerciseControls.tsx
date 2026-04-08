@@ -34,7 +34,12 @@ export default function ExerciseControls({
 
   return (
     <View style={styles.container}>
-      <View style={[styles.progressBar, { backgroundColor: colors.surface }]}>
+      <View
+        style={[styles.progressBar, { backgroundColor: colors.surface }]}
+        accessibilityRole="progressbar"
+        accessibilityValue={{ min: 0, max: 100, now: Math.round(progress) }}
+        accessibilityLabel="Progression de l'exercice"
+      >
         <View
           style={[
             styles.progressFill,
@@ -55,11 +60,14 @@ export default function ExerciseControls({
           style={[styles.controlButton, { backgroundColor: colors.primary }]}
           onPress={onPlayPause}
           activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel={!isPlaying ? 'Démarrer' : isPaused ? 'Reprendre' : 'Mettre en pause'}
         >
           <Ionicons
             name={!isPlaying || isPaused ? 'play' : 'pause'}
             size={32}
             color="#ffffff"
+            importantForAccessibility="no"
           />
         </TouchableOpacity>
 
@@ -72,8 +80,10 @@ export default function ExerciseControls({
             ]}
             onPress={onStop}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel="Arrêter l'exercice"
           >
-            <Ionicons name="stop" size={32} color="#ffffff" />
+            <Ionicons name="stop" size={32} color="#ffffff" importantForAccessibility="no" />
           </TouchableOpacity>
         )}
       </View>
