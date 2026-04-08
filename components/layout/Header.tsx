@@ -46,8 +46,13 @@ const Header = ({ onMenuPress }: HeaderProps) => {
   return (
     <>
       <Animated.View style={[styles.container, animatedStyle]}>
-        <TouchableOpacity onPress={handleMenuPress} style={styles.menuButton}>
-          <Ionicons name="menu" size={28} color={colors.text} />
+        <TouchableOpacity
+          onPress={handleMenuPress}
+          style={styles.menuButton}
+          accessibilityRole="button"
+          accessibilityLabel="Ouvrir le menu"
+        >
+          <Ionicons name="menu" size={28} color={colors.text} importantForAccessibility="no" />
         </TouchableOpacity>
 
       <View style={styles.rightSection}>
@@ -61,6 +66,8 @@ const Header = ({ onMenuPress }: HeaderProps) => {
                 : colors.secondary,
             },
           ]}
+          accessibilityRole="button"
+          accessibilityLabel={isAuthenticated ? `Profil de ${user?.firstName || "User"}` : "Se connecter"}
         >
           {isAuthenticated ? (
             <>
@@ -92,6 +99,7 @@ const Header = ({ onMenuPress }: HeaderProps) => {
           colorOn="#1e293b"
           iconColorOn="#FDB813"
           iconColorOff="#1e293b"
+          accessibilityLabel={theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre"}
         />
       </View>
     </Animated.View>
