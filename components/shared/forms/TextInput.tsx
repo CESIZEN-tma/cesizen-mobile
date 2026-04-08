@@ -62,6 +62,8 @@ const TextInput = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           secureTextEntry={isPassword && !showPassword}
+          accessibilityLabel={label}
+          accessibilityHint={error ? error : undefined}
           {...props}
         />
 
@@ -69,6 +71,8 @@ const TextInput = ({
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
             style={styles.eyeIcon}
+            accessibilityRole="button"
+            accessibilityLabel={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
           >
             <Ionicons
               name={showPassword ? "eye-off" : "eye"}
@@ -79,7 +83,15 @@ const TextInput = ({
         )}
       </View>
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && (
+        <Text
+          style={styles.error}
+          accessibilityLiveRegion="polite"
+          accessibilityRole="alert"
+        >
+          {error}
+        </Text>
+      )}
     </View>
   );
 };

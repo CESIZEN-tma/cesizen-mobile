@@ -15,6 +15,7 @@ type SwitchProps = {
   iconColorOff?: string;
   width?: number;
   height?: number;
+  accessibilityLabel?: string;
 };
 
 const Switch = ({
@@ -29,6 +30,7 @@ const Switch = ({
   iconColorOff,
   width = 60,
   height = 32,
+  accessibilityLabel,
 }: SwitchProps) => {
   const { colors } = useTheme();
   const translateX = useRef(new Animated.Value(isOn ? 1 : 0)).current;
@@ -64,6 +66,9 @@ const Switch = ({
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={handlePress}
+      accessibilityRole="switch"
+      accessibilityState={{ checked: isOn }}
+      accessibilityLabel={accessibilityLabel}
       style={[
         styles.container,
         {

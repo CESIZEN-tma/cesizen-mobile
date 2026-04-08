@@ -46,6 +46,8 @@ export default function PressButton({
       onPress={onPress}
       onPressIn={pressIn}
       onPressOut={pressOut}
+      accessibilityRole="button"
+      accessibilityLabel={label}
       style={[
         styles.button,
         {
