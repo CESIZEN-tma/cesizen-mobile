@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -34,6 +34,13 @@ export default function BreathingCircle({
   isPlaying,
 }: BreathingCircleProps) {
   const { colors } = useTheme();
+  const { width } = useWindowDimensions();
+
+  const CONTAINER_SIZE = Math.min(Math.round(width * 0.67), 300);
+  const OUTER_SIZE = Math.round(CONTAINER_SIZE * 0.6);
+  const INNER_SIZE = Math.round(CONTAINER_SIZE * 0.4);
+  const OUTER_RADIUS = OUTER_SIZE / 2;
+  const INNER_RADIUS = INNER_SIZE / 2;
   const scale = useSharedValue(1);
   const opacity = useSharedValue(0.6);
 
@@ -82,7 +89,7 @@ export default function BreathingCircle({
 
   return (
     <View
-      style={styles.container}
+      style={[styles.container, { width: CONTAINER_SIZE, height: CONTAINER_SIZE }]}
       accessible={true}
       accessibilityLabel={accessibilityLabel}
       accessibilityLiveRegion="polite"
@@ -91,6 +98,9 @@ export default function BreathingCircle({
         style={[
           styles.circle,
           {
+            width: OUTER_SIZE,
+            height: OUTER_SIZE,
+            borderRadius: OUTER_RADIUS,
             backgroundColor: colors.primary,
           },
           animatedStyle,
@@ -101,6 +111,9 @@ export default function BreathingCircle({
         style={[
           styles.innerCircle,
           {
+            width: INNER_SIZE,
+            height: INNER_SIZE,
+            borderRadius: INNER_RADIUS,
             backgroundColor: colors.background,
             borderColor: colors.primary,
           },
@@ -113,21 +126,13 @@ export default function BreathingCircle({
 
 const styles = StyleSheet.create({
   container: {
-    width: 250,
-    height: 250,
     justifyContent: 'center',
     alignItems: 'center',
   },
   circle: {
     position: 'absolute',
-    width: 150,
-    height: 150,
-    borderRadius: 75,
   },
   innerCircle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
     borderWidth: 3,
   },
 });
