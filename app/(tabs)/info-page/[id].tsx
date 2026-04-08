@@ -119,8 +119,13 @@ export default function InfoPageScreen() {
     <View style={[styles.screen, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       {/* Header */}
       <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+          accessibilityRole="button"
+          accessibilityLabel="Retour"
+        >
+          <Ionicons name="arrow-back" size={24} color={colors.text} importantForAccessibility="no" />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.text }]} numberOfLines={1}>
           {page?.title ?? "Article"}
@@ -133,7 +138,7 @@ export default function InfoPageScreen() {
         </View>
       ) : error ? (
         <View style={styles.center}>
-          <Ionicons name="alert-circle-outline" size={48} color={colors.textSecondary} />
+          <Ionicons name="alert-circle-outline" size={48} color={colors.textSecondary} importantForAccessibility="no" />
           <Text style={[styles.errorText, { color: colors.textSecondary }]}>{error}</Text>
         </View>
       ) : page ? (

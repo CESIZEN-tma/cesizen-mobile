@@ -122,6 +122,9 @@ export default function ResourcesScreen() {
           style={[styles.pageCard, { backgroundColor: colors.surface }]}
           onPress={() => router.push(`/(tabs)/info-page/${item.id}` as any)}
           activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={item.description ? `${item.title}. ${item.description}` : item.title}
+          accessibilityHint="Ouvre l'article"
         >
           <Text style={[styles.pageTitle, { color: colors.text }]}>{item.title}</Text>
           {item.description ? (
@@ -164,6 +167,7 @@ export default function ResourcesScreen() {
             size={18}
             color={colors.textSecondary}
             style={styles.cardChevron}
+            importantForAccessibility="no"
           />
         </TouchableOpacity>
       );
@@ -188,17 +192,22 @@ export default function ResourcesScreen() {
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.filtersContainer}>
           <View style={[styles.searchBar, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <Ionicons name="search-outline" size={18} color={colors.textSecondary} />
+            <Ionicons name="search-outline" size={18} color={colors.textSecondary} importantForAccessibility="no" />
             <TextInput
               style={[styles.searchInput, { color: colors.text }]}
               placeholder="Rechercher un article..."
               placeholderTextColor={colors.textSecondary}
               value={searchQuery}
               onChangeText={setSearchQuery}
+              accessibilityLabel="Rechercher un article"
             />
             {searchQuery.length > 0 && (
-              <TouchableOpacity onPress={() => setSearchQuery('')}>
-                <Ionicons name="close-circle" size={18} color={colors.textSecondary} />
+              <TouchableOpacity
+                onPress={() => setSearchQuery('')}
+                accessibilityRole="button"
+                accessibilityLabel="Effacer la recherche"
+              >
+                <Ionicons name="close-circle" size={18} color={colors.textSecondary} importantForAccessibility="no" />
               </TouchableOpacity>
             )}
           </View>
@@ -208,12 +217,14 @@ export default function ResourcesScreen() {
               style={[styles.tagFilterButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
               onPress={() => setTagModalVisible(true)}
               activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel={`Filtrer par tags : ${activeTagLabel}`}
             >
-              <Ionicons name="pricetags-outline" size={16} color={colors.primary} />
+              <Ionicons name="pricetags-outline" size={16} color={colors.primary} importantForAccessibility="no" />
               <Text style={[styles.tagFilterText, { color: colors.text }]} numberOfLines={1}>
                 {activeTagLabel}
               </Text>
-              <Ionicons name="chevron-down" size={14} color={colors.textSecondary} />
+              <Ionicons name="chevron-down" size={14} color={colors.textSecondary} importantForAccessibility="no" />
             </TouchableOpacity>
 
             {selectedTagIds.length > 0 && (
@@ -221,8 +232,10 @@ export default function ResourcesScreen() {
                 style={[styles.resetButton, { backgroundColor: colors.error ?? '#ef4444' }]}
                 onPress={resetTags}
                 activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel="Réinitialiser les filtres"
               >
-                <Ionicons name="close" size={14} color="#ffffff" />
+                <Ionicons name="close" size={14} color="#ffffff" importantForAccessibility="no" />
                 <Text style={styles.resetButtonText}>Réinitialiser</Text>
               </TouchableOpacity>
             )}
@@ -241,7 +254,7 @@ export default function ResourcesScreen() {
           </View>
         ) : filteredPages.length === 0 ? (
           <View style={styles.center}>
-            <Ionicons name="document-text-outline" size={52} color={colors.textSecondary} />
+            <Ionicons name="document-text-outline" size={52} color={colors.textSecondary} importantForAccessibility="no" />
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
               Aucun article trouvé
             </Text>
@@ -270,8 +283,10 @@ export default function ResourcesScreen() {
             ]}
             onPress={scrollToTop}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel="Revenir en haut de la liste"
           >
-            <Ionicons name="arrow-up" size={22} color="#ffffff" />
+            <Ionicons name="arrow-up" size={22} color="#ffffff" importantForAccessibility="no" />
           </TouchableOpacity>
         )}
 
@@ -280,6 +295,7 @@ export default function ResourcesScreen() {
           transparent
           animationType="slide"
           onRequestClose={() => setTagModalVisible(false)}
+          accessibilityViewIsModal={true}
         >
           <View style={styles.modalOverlay}>
             <TouchableOpacity
@@ -290,23 +306,32 @@ export default function ResourcesScreen() {
             <View style={[styles.modalSheet, { backgroundColor: colors.background }]}>
               <View style={[styles.modalHeader, { borderBottomColor: colors.border }]}>
                 <Text style={[styles.modalTitle, { color: colors.text }]}>Filtrer par tags</Text>
-                <TouchableOpacity onPress={() => setTagModalVisible(false)}>
-                  <Ionicons name="close" size={24} color={colors.text} />
+                <TouchableOpacity
+                  onPress={() => setTagModalVisible(false)}
+                  accessibilityRole="button"
+                  accessibilityLabel="Fermer le filtre par tags"
+                >
+                  <Ionicons name="close" size={24} color={colors.text} importantForAccessibility="no" />
                 </TouchableOpacity>
               </View>
 
               <View style={[styles.modalSearchBar, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                <Ionicons name="search-outline" size={16} color={colors.textSecondary} />
+                <Ionicons name="search-outline" size={16} color={colors.textSecondary} importantForAccessibility="no" />
                 <TextInput
                   style={[styles.modalSearchInput, { color: colors.text }]}
                   placeholder="Rechercher un tag..."
                   placeholderTextColor={colors.textSecondary}
                   value={tagSearch}
                   onChangeText={setTagSearch}
+                  accessibilityLabel="Rechercher un tag"
                 />
                 {tagSearch.length > 0 && (
-                  <TouchableOpacity onPress={() => setTagSearch('')}>
-                    <Ionicons name="close-circle" size={16} color={colors.textSecondary} />
+                  <TouchableOpacity
+                    onPress={() => setTagSearch('')}
+                    accessibilityRole="button"
+                    accessibilityLabel="Effacer la recherche de tags"
+                  >
+                    <Ionicons name="close-circle" size={16} color={colors.textSecondary} importantForAccessibility="no" />
                   </TouchableOpacity>
                 )}
               </View>
@@ -320,6 +345,9 @@ export default function ResourcesScreen() {
                       style={[styles.modalTagRow, { borderBottomColor: colors.border }]}
                       onPress={() => toggleTag(tag.id)}
                       activeOpacity={0.7}
+                      accessibilityRole="checkbox"
+                      accessibilityState={{ checked: isSelected }}
+                      accessibilityLabel={tag.label}
                     >
                       <Text style={[styles.modalTagLabel, { color: colors.text }]}>{tag.label}</Text>
                       <View
@@ -330,8 +358,9 @@ export default function ResourcesScreen() {
                             borderColor: isSelected ? colors.primary : colors.textSecondary,
                           },
                         ]}
+                        importantForAccessibility="no"
                       >
-                        {isSelected && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+                        {isSelected && <Ionicons name="checkmark" size={14} color="#ffffff" importantForAccessibility="no" />}
                       </View>
                     </TouchableOpacity>
                   );
@@ -343,6 +372,8 @@ export default function ResourcesScreen() {
                   style={[styles.modalResetButton, { borderColor: colors.border }]}
                   onPress={() => { resetTags(); setTagSearch(''); }}
                   activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel="Réinitialiser les tags sélectionnés"
                 >
                   <Text style={[styles.modalResetText, { color: colors.textSecondary }]}>Réinitialiser</Text>
                 </TouchableOpacity>
@@ -350,6 +381,8 @@ export default function ResourcesScreen() {
                   style={[styles.modalApplyButton, { backgroundColor: colors.primary }]}
                   onPress={() => { setTagModalVisible(false); setTagSearch(''); }}
                   activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel="Appliquer les filtres"
                 >
                   <Text style={styles.modalApplyText}>Appliquer</Text>
                 </TouchableOpacity>
