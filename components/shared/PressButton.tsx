@@ -1,10 +1,11 @@
 import { useTheme } from "@/hooks/themeHooks";
+import { scale, verticalScale } from "@/utils/scaling";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef } from "react";
 import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type PressableButtonProps = {
-  width?: number;
+  width?: number | string;
   height?: number;
   secondary?: boolean;
   label: string;
@@ -13,8 +14,8 @@ type PressableButtonProps = {
 };
 
 export default function PressButton({
-  width = 200,
-  height = 40,
+  width = scale(200),
+  height = verticalScale(40),
   secondary = false,
   label,
   onPress,

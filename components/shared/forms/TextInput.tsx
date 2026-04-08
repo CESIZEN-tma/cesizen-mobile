@@ -1,4 +1,5 @@
 import { useTheme } from "@/hooks/themeHooks";
+import { moderateScale, scale, verticalScale } from "@/utils/scaling";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
@@ -98,36 +99,36 @@ const TextInput = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: verticalScale(16),
   },
   label: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: "600",
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 2,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    height: 50,
+    borderRadius: scale(12),
+    paddingHorizontal: scale(12),
+    height: verticalScale(50),
   },
   icon: {
-    marginRight: 8,
+    marginRight: scale(8),
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: moderateScale(16),
   },
   eyeIcon: {
-    padding: 4,
+    padding: scale(4),
   },
   error: {
     color: "#ef4444",
-    fontSize: 12,
-    marginTop: 4,
-    marginLeft: 4,
+    fontSize: moderateScale(12),
+    marginTop: verticalScale(4),
+    marginLeft: scale(4),
   },
 });
 
