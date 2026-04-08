@@ -10,7 +10,7 @@ export default function AuthLayout() {
   useEffect(() => {
     if (isLoading) return;
 
-    const inAuthFlow = segments.includes("(auth)");
+    const inAuthFlow = (segments as string[]).includes("(auth)");
     const inFirstOpenedPage = segments[segments.length - 1] === "firstOpenedPage";
 
     // If authenticated and trying to access login/register (not firstOpenedPage), redirect to main app
