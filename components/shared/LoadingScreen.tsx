@@ -1,4 +1,5 @@
 import { useTheme } from "@/hooks/themeHooks";
+import { moderateScale, scale, verticalScale } from "@/utils/scaling";
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import Animated, {
@@ -104,37 +105,37 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    paddingHorizontal: 40,
+    paddingHorizontal: scale(40),
   },
   logoContainer: {
-    marginBottom: 60,
+    marginBottom: verticalScale(60),
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: scale(150),
+    height: scale(150),
   },
   progressContainer: {
     width: "100%",
     alignItems: "center",
-    gap: 12,
+    gap: verticalScale(12),
   },
   progressBarBackground: {
     width: "100%",
-    height: 8,
-    borderRadius: 4,
+    height: verticalScale(8),
+    borderRadius: scale(4),
     overflow: "hidden",
   },
   progressBar: {
     height: "100%",
-    borderRadius: 4,
+    borderRadius: scale(4),
   },
   progressText: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: "600",
   },
   message: {
-    marginTop: 24,
-    fontSize: 14,
+    marginTop: verticalScale(24),
+    fontSize: moderateScale(14),
     textAlign: "center",
   },
 });
