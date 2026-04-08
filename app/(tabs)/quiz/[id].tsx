@@ -6,6 +6,8 @@ import { useTheme } from "@/hooks/themeHooks";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuiz } from "@/hooks/useQuiz";
 import { quizApi } from "@/app/services/api/quizApi";
+import secureStoreService from "@/app/services/secureStore.service";
+import { QuizResponse } from "@/types/quiz.types";
 import QuizQuestion from "@/components/quiz/QuizQuestion";
 import PressButton from "@/components/shared/PressButton";
 import Loader from "@/components/shared/Loader";
@@ -17,10 +19,11 @@ export default function QuizTakingScreen() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, pendingSubmit } = useLocalSearchParams<{ id: string; pendingSubmit?: string }>();
   const {
     quizState,
     startQuiz,
+    restoreQuiz,
     selectAnswer,
     goToNextQuestion,
     goToPreviousQuestion,
@@ -59,7 +62,16 @@ export default function QuizTakingScreen() {
           .sort((a, b) => a.position - b.position),
       };
 
-      startQuiz(quiz);
+      if (pendingSubmit === 'true') {
+        const pending = await secureStoreService.getObject<{ quizId: string; responses: QuizResponse[] }>('pendingQuizSubmission');
+        if (pending && pending.quizId === id) {
+          restoreQuiz(quiz, pending.responses);
+        } else {
+          startQuiz(quiz);
+        }
+      } else {
+        startQuiz(quiz);
+      }
     } catch (err: any) {
       console.error("Failed to load quiz:", err);
       setError("Impossible de charger le quiz. Veuillez réessayer.");
@@ -78,22 +90,20 @@ export default function QuizTakingScreen() {
 
   const handleSubmit = async () => {
     if (!isAuthenticated) {
-      Alert.alert(
-        "Connexion requise",
-        "Vous devez être connecté pour sauvegarder votre configuration personnalisée.",
-        [
-          { text: "Annuler", style: "cancel" },
-          {
-            text: "Se connecter",
-            onPress: () => router.replace("/(auth)/login" as any),
-          },
-        ]
-      );
+      await secureStoreService.setObject('pendingQuizSubmission', {
+        quizId: id,
+        responses: quizState.responses,
+      });
+      router.replace({
+        pathname: "/(auth)/login" as any,
+        params: { returnTo: 'quiz-submit', quizId: id },
+      });
       return;
     }
 
     try {
       const configuration = await submitQuiz();
+      await secureStoreService.removeItem('pendingQuizSubmission');
       router.replace({
         pathname: "/(tabs)/quiz/result" as any,
         params: { configId: configuration.id },

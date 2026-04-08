@@ -19,7 +19,7 @@ const Login = () => {
   const { colors } = useTheme();
   const router = useRouter();
   const { login } = useAuth();
-  const { notice } = useLocalSearchParams<{ notice?: string }>();
+  const { notice, returnTo, quizId } = useLocalSearchParams<{ notice?: string; returnTo?: string; quizId?: string }>();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -60,7 +60,14 @@ const Login = () => {
       setIsLoading(true);
       try {
         await login(formData.email, formData.password);
-        router.replace("/(tabs)");
+        if (returnTo === 'quiz-submit' && quizId) {
+          router.replace({
+            pathname: `/(tabs)/quiz/${quizId}` as any,
+            params: { pendingSubmit: 'true' },
+          });
+        } else {
+          router.replace("/(tabs)");
+        }
       } catch (error: any) {
         console.error("Login failed:", error);
 

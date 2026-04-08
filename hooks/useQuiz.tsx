@@ -11,6 +11,7 @@ import { Configuration } from "@/types/api.types";
 type QuizContextType = {
   quizState: QuizState;
   startQuiz: (quiz: Quiz) => void;
+  restoreQuiz: (quiz: Quiz, responses: QuizResponse[]) => void;
   selectAnswer: (questionId: string, optionId: string) => void;
   goToNextQuestion: () => boolean;
   goToPreviousQuestion: () => boolean;
@@ -36,6 +37,15 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       currentQuiz: quiz,
       currentQuestionIndex: 0,
       responses: [],
+      isSubmitting: false,
+    });
+  };
+
+  const restoreQuiz = (quiz: Quiz, responses: QuizResponse[]) => {
+    setQuizState({
+      currentQuiz: quiz,
+      currentQuestionIndex: quiz.questions.length - 1,
+      responses,
       isSubmitting: false,
     });
   };
@@ -142,6 +152,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       value={{
         quizState,
         startQuiz,
+        restoreQuiz,
         selectAnswer,
         goToNextQuestion,
         goToPreviousQuestion,
