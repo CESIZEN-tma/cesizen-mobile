@@ -16,6 +16,7 @@ import { usePendingConfirmation } from '@/hooks/usePendingConfirmation';
 import ConfigurationCard from '@/components/configurations/ConfigurationCard';
 import Loader from '@/components/shared/Loader';
 import PressButton from '@/components/shared/PressButton';
+import { moderateScale, scale, verticalScale } from '@/utils/scaling';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -230,14 +231,14 @@ export default function DashboardScreen() {
                 <PressButton
                   label="Se connecter"
                   onPress={() => router.push('/(auth)/login' as any)}
-                  width={150}
-                  height={44}
+                  width={scale(150)}
+                  height={verticalScale(44)}
                 />
                 <PressButton
                   label="Créer un compte"
                   onPress={() => router.push('/(auth)/register' as any)}
-                  width={150}
-                  height={44}
+                  width={scale(150)}
+                  height={verticalScale(44)}
                   secondary
                 />
               </View>
@@ -360,61 +361,61 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingBottom: 24,
+    paddingBottom: verticalScale(24),
   },
   pendingBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginHorizontal: 16,
-    marginTop: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 10,
+    gap: scale(10),
+    marginHorizontal: scale(16),
+    marginTop: verticalScale(16),
+    paddingHorizontal: scale(14),
+    paddingVertical: verticalScale(12),
+    borderRadius: scale(10),
     borderWidth: 1,
   },
   pendingBannerText: {
     flex: 1,
-    fontSize: 13,
+    fontSize: moderateScale(13),
     fontWeight: '500',
-    lineHeight: 18,
+    lineHeight: moderateScale(18),
   },
   welcomeSection: {
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 16,
+    paddingHorizontal: scale(24),
+    paddingTop: verticalScale(24),
+    paddingBottom: verticalScale(16),
   },
   greeting: {
-    fontSize: 16,
-    marginBottom: 4,
+    fontSize: moderateScale(16),
+    marginBottom: verticalScale(4),
   },
   userName: {
-    fontSize: 32,
+    fontSize: moderateScale(32),
     fontWeight: '700',
   },
   authButtonsContainer: {
     flexDirection: 'row',
-    gap: 12,
-    marginTop: 16,
+    gap: scale(12),
+    marginTop: verticalScale(16),
   },
   quickActionsSection: {
-    paddingHorizontal: 24,
-    marginBottom: 32,
+    paddingHorizontal: scale(24),
+    marginBottom: verticalScale(32),
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: moderateScale(20),
     fontWeight: '600',
-    marginBottom: 16,
+    marginBottom: verticalScale(16),
   },
   quickActionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: scale(12),
   },
   quickActionCard: {
     width: '48%',
-    padding: 16,
-    borderRadius: 12,
+    padding: scale(16),
+    borderRadius: scale(12),
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -423,105 +424,105 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   quickActionIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: scale(56),
+    height: scale(56),
+    borderRadius: scale(28),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginBottom: verticalScale(12),
   },
   quickActionLabel: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: '600',
     textAlign: 'center',
   },
   loaderContainer: {
-    paddingVertical: 40,
+    paddingVertical: verticalScale(40),
     alignItems: 'center',
   },
   recentSection: {
-    paddingHorizontal: 24,
-    marginBottom: 24,
+    paddingHorizontal: scale(24),
+    marginBottom: verticalScale(24),
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: verticalScale(16),
   },
   seeAllText: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: '600',
   },
   emptyState: {
-    paddingHorizontal: 40,
-    paddingVertical: 40,
+    paddingHorizontal: scale(40),
+    paddingVertical: verticalScale(40),
     alignItems: 'center',
-    gap: 12,
+    gap: verticalScale(12),
   },
   emptyTitle: {
-    fontSize: 20,
+    fontSize: moderateScale(20),
     fontWeight: '600',
   },
   emptySubtitle: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
   },
   emptyButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+    paddingVertical: verticalScale(12),
+    paddingHorizontal: scale(24),
+    borderRadius: scale(8),
   },
   emptyButtonText: {
     color: '#ffffff',
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: '600',
   },
   tipsSection: {
-    paddingHorizontal: 24,
+    paddingHorizontal: scale(24),
   },
   tipCard: {
     flexDirection: 'row',
-    padding: 16,
-    borderRadius: 12,
+    padding: scale(16),
+    borderRadius: scale(12),
     borderWidth: 1,
-    gap: 12,
+    gap: scale(12),
   },
   tipContent: {
     flex: 1,
   },
   tipTitle: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: '600',
-    marginBottom: 4,
+    marginBottom: verticalScale(4),
   },
   tipText: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: moderateScale(14),
+    lineHeight: moderateScale(20),
   },
   simplifiedContent: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 32,
-    gap: 28,
+    paddingHorizontal: scale(24),
+    paddingVertical: verticalScale(32),
+    gap: verticalScale(28),
   },
   simplifiedGreeting: {
     alignItems: 'center',
   },
   simplifiedHello: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
   },
   simplifiedName: {
-    fontSize: 32,
+    fontSize: moderateScale(32),
     fontWeight: '700',
-    marginTop: 2,
+    marginTop: verticalScale(2),
   },
   simplifiedCard: {
-    borderRadius: 20,
-    padding: 28,
+    borderRadius: scale(20),
+    padding: scale(28),
     alignItems: 'center',
-    gap: 12,
+    gap: verticalScale(12),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -529,47 +530,47 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   simplifiedIconCircle: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
+    width: scale(88),
+    height: scale(88),
+    borderRadius: scale(44),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 4,
+    marginBottom: verticalScale(4),
   },
   simplifiedCardTitle: {
-    fontSize: 22,
+    fontSize: moderateScale(22),
     fontWeight: '700',
     textAlign: 'center',
   },
   simplifiedCardSub: {
-    fontSize: 15,
+    fontSize: moderateScale(15),
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: moderateScale(22),
   },
   simplifiedStartButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginTop: 8,
-    paddingVertical: 14,
-    paddingHorizontal: 32,
-    borderRadius: 14,
+    gap: scale(8),
+    marginTop: verticalScale(8),
+    paddingVertical: verticalScale(14),
+    paddingHorizontal: scale(32),
+    borderRadius: scale(14),
   },
   simplifiedStartText: {
     color: '#ffffff',
-    fontSize: 17,
+    fontSize: moderateScale(17),
     fontWeight: '700',
   },
   simplifiedActions: {
     flexDirection: 'row',
-    gap: 12,
+    gap: scale(12),
   },
   simplifiedAction: {
     flex: 1,
-    borderRadius: 14,
-    paddingVertical: 18,
+    borderRadius: scale(14),
+    paddingVertical: verticalScale(18),
     alignItems: 'center',
-    gap: 8,
+    gap: verticalScale(8),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,
@@ -577,7 +578,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   simplifiedActionLabel: {
-    fontSize: 13,
+    fontSize: moderateScale(13),
     fontWeight: '600',
   },
 });

@@ -2,6 +2,7 @@ import PressButton from "@/components/shared/PressButton";
 import TextInput from "@/components/shared/forms/TextInput";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/themeHooks";
+import { moderateScale, scale, verticalScale } from "@/utils/scaling";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -168,8 +169,8 @@ const Login = () => {
             <PressButton
               label={isLoading ? "Connexion..." : "Se connecter"}
               onPress={isLoading ? () => {} : handleLogin}
-              width={300}
-              height={50}
+              width="90%"
+              height={verticalScale(50)}
             />
           </View>
 
@@ -198,60 +199,60 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     justifyContent: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 40,
+    paddingHorizontal: scale(24),
+    paddingVertical: verticalScale(40),
   },
   backButton: {
     position: "absolute",
-    top: 40,
-    left: 24,
-    padding: 8,
+    top: verticalScale(40),
+    left: scale(24),
+    padding: scale(8),
   },
   noticeBanner: {
     flexDirection: "row",
     alignItems: "flex-start",
     borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginTop: 80,
-    marginBottom: -16,
-    gap: 8,
+    borderRadius: scale(10),
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(10),
+    marginTop: verticalScale(80),
+    marginBottom: -verticalScale(16),
+    gap: scale(8),
   },
   noticeIcon: {
     marginTop: 1,
   },
   noticeText: {
     flex: 1,
-    fontSize: 13,
-    lineHeight: 18,
+    fontSize: moderateScale(13),
+    lineHeight: moderateScale(18),
     fontWeight: "500",
   },
   header: {
-    marginBottom: 40,
+    marginBottom: verticalScale(40),
   },
   title: {
-    fontSize: 32,
+    fontSize: moderateScale(32),
     fontWeight: "700",
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
   },
   form: {
     width: "100%",
   },
   forgotPassword: {
     alignSelf: "flex-end",
-    marginBottom: 24,
+    marginBottom: verticalScale(24),
   },
   forgotPasswordText: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: "600",
   },
   buttonContainer: {
     alignItems: "center",
-    marginBottom: 24,
+    marginBottom: verticalScale(24),
   },
   footer: {
     flexDirection: "row",
@@ -259,10 +260,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   footerText: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
   },
   footerLink: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: "600",
   },
 });
