@@ -28,6 +28,9 @@ export default function QuizRadioButton({
       ]}
       onPress={onPress}
       activeOpacity={0.7}
+      accessibilityRole="radio"
+      accessibilityState={{ selected }}
+      accessibilityLabel={label}
     >
       <View
         style={[

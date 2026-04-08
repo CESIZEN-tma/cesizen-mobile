@@ -9,6 +9,13 @@ import Animated, {
 import { BreathingPhase } from '@/types/exercise.types';
 import { useTheme } from '@/hooks/themeHooks';
 
+const PHASE_LABELS: Record<BreathingPhase, string> = {
+  inhale: 'Inspiration',
+  retention1: 'Rétention poumons pleins',
+  exhale: 'Expiration',
+  retention2: 'Rétention poumons vides',
+};
+
 interface BreathingCircleProps {
   phase: BreathingPhase;
   inhaleDuration: number;
@@ -68,8 +75,18 @@ export default function BreathingCircle({
     opacity: opacity.value,
   }));
 
+  const phaseLabel = PHASE_LABELS[phase];
+  const accessibilityLabel = isPlaying
+    ? `Exercice de respiration en cours : ${phaseLabel}`
+    : 'Exercice de respiration en pause';
+
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      accessible={true}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLiveRegion="polite"
+    >
       <Animated.View
         style={[
           styles.circle,
@@ -78,6 +95,7 @@ export default function BreathingCircle({
           },
           animatedStyle,
         ]}
+        importantForAccessibility="no"
       />
       <View
         style={[
@@ -87,6 +105,7 @@ export default function BreathingCircle({
             borderColor: colors.primary,
           },
         ]}
+        importantForAccessibility="no"
       />
     </View>
   );

@@ -24,6 +24,9 @@ const Checkbox = ({
       onPress={() => !disabled && onChange(!checked)}
       style={styles.container}
       disabled={disabled}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked, disabled }}
+      accessibilityLabel={label}
     >
       <View
         style={[

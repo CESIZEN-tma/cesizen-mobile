@@ -11,6 +11,7 @@ type NavItem = {
   activeIcon: keyof typeof Ionicons.glyphMap;
   route: string;
   matchPaths: string[];
+  label: string;
   authNeeded?: boolean;
 };
 
@@ -20,30 +21,35 @@ const navItems: NavItem[] = [
     activeIcon: "home",
     route: "/(tabs)",
     matchPaths: ["/", "/(tabs)", "/(tabs)/"],
+    label: "Accueil",
   },
   {
     icon: "list-outline",
     activeIcon: "list",
     route: "/(tabs)/quizzes",
     matchPaths: ["/quizzes", "/(tabs)/quizzes"],
+    label: "Quiz",
   },
   {
     icon: "library-outline",
     activeIcon: "library",
     route: "/(tabs)/library",
     matchPaths: ["/library", "/(tabs)/library"],
+    label: "Bibliothèque",
   },
   {
     icon: "newspaper-outline",
     activeIcon: "newspaper",
     route: "/(tabs)/resources",
     matchPaths: ["/resources", "/(tabs)/resources"],
+    label: "Actualités",
   },
   {
     icon: "person-outline",
     activeIcon: "person",
     route: "/(tabs)/profile",
     matchPaths: ["/profile", "/(tabs)/profile"],
+    label: "Profil",
     authNeeded: true,
   },
 ];
@@ -72,6 +78,7 @@ const Footer = () => {
           paddingBottom: insets.bottom + 10,
         },
       ]}
+      accessibilityRole="tablist"
     >
       {navItems.map((item, index) => {
         if (item.authNeeded && !isAuthenticated) return null;
@@ -82,11 +89,15 @@ const Footer = () => {
             style={styles.navItem}
             onPress={() => router.navigate(item.route as any)}
             activeOpacity={0.7}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: isActive }}
+            accessibilityLabel={item.label}
           >
             <Ionicons
               name={isActive ? item.activeIcon : item.icon}
               size={28}
               color={isActive ? colors.primary : colors.textSecondary}
+              importantForAccessibility="no"
             />
           </TouchableOpacity>
         );
