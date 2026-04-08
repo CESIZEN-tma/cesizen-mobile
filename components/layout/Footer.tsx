@@ -32,7 +32,6 @@ const navItems: NavItem[] = [
     activeIcon: "library",
     route: "/(tabs)/library",
     matchPaths: ["/library", "/(tabs)/library"],
-    authNeeded: true
   },
   {
     icon: "newspaper-outline",

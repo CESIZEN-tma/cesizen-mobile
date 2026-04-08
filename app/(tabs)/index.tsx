@@ -73,13 +73,7 @@ export default function DashboardScreen() {
       icon: 'play-circle',
       label: 'Démarrer un exercice',
       color: colors.primary,
-      onPress: () => {
-        if (isAuthenticated) {
-          router.push('/(tabs)/library' as any);
-        } else {
-          router.push('/(auth)/login' as any);
-        }
-      },
+      onPress: () => router.push('/(tabs)/library' as any),
     },
     {
       icon: 'clipboard',

@@ -8,8 +8,8 @@ import {
   Alert,
 } from 'react-native';
 import PageLayout from '@/components/PageLayout';
-import AuthGuard from '@/components/auth/AuthGuard';
 import { useTheme } from '@/hooks/themeHooks';
+import { useAuth } from '@/hooks/useAuth';
 import { useConfiguration } from '@/hooks/useConfiguration';
 import ConfigurationCard from '@/components/configurations/ConfigurationCard';
 import Loader from '@/components/shared/Loader';
@@ -21,6 +21,7 @@ type ActiveTab = 'public' | 'mine' | 'bookmarks';
 
 export default function LibraryScreen() {
   const { colors } = useTheme();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const {
     adminConfigurations,
@@ -61,6 +62,17 @@ export default function LibraryScreen() {
   };
 
   const handleBookmark = async (configId: string) => {
+    if (!isAuthenticated) {
+      Alert.alert(
+        'Connexion requise',
+        'Vous devez être connecté pour gérer vos favoris',
+        [
+          { text: 'Annuler', style: 'cancel' },
+          { text: 'Se connecter', onPress: () => router.push('/(auth)/login' as any) },
+        ]
+      );
+      return;
+    }
     try {
       if (isBookmarked(configId)) {
         await removeBookmark(configId);
@@ -163,63 +175,65 @@ export default function LibraryScreen() {
 
   const tabs: { key: ActiveTab; label: string }[] = [
     { key: 'public', label: 'Publiques' },
-    { key: 'mine', label: 'Mes configs' },
-    { key: 'bookmarks', label: 'Favoris' },
+    ...(isAuthenticated
+      ? [
+          { key: 'mine' as ActiveTab, label: 'Mes configs' },
+          { key: 'bookmarks' as ActiveTab, label: 'Favoris' },
+        ]
+      : []),
   ];
 
   return (
-    <AuthGuard requireAuth={true}>
-      <PageLayout header footer>
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
-          <View style={styles.headerContainer}>
-            <Text style={[styles.title, { color: colors.text }]}>
-              Bibliothèque
-            </Text>
-            {activeTab === 'mine' && (
-              <TouchableOpacity
-                style={[styles.headerButton, { backgroundColor: colors.primary }]}
-                onPress={handleCreateNew}
-              >
-                <Ionicons name="add" size={20} color="#ffffff" />
-              </TouchableOpacity>
-            )}
-          </View>
+    <PageLayout header footer>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={styles.headerContainer}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            Bibliothèque
+          </Text>
+          {isAuthenticated && activeTab === 'mine' && (
+            <TouchableOpacity
+              style={[styles.headerButton, { backgroundColor: colors.primary }]}
+              onPress={handleCreateNew}
+            >
+              <Ionicons name="add" size={20} color="#ffffff" />
+            </TouchableOpacity>
+          )}
+        </View>
 
-          <View style={styles.tabsContainer}>
-            {tabs.map((tab) => (
-              <TouchableOpacity
-                key={tab.key}
+        <View style={styles.tabsContainer}>
+          {tabs.map((tab) => (
+            <TouchableOpacity
+              key={tab.key}
+              style={[
+                styles.tab,
+                activeTab === tab.key && {
+                  borderBottomColor: colors.primary,
+                  borderBottomWidth: 2,
+                },
+              ]}
+              onPress={() => setActiveTab(tab.key)}
+            >
+              <Text
                 style={[
-                  styles.tab,
-                  activeTab === tab.key && {
-                    borderBottomColor: colors.primary,
-                    borderBottomWidth: 2,
+                  styles.tabText,
+                  {
+                    color:
+                      activeTab === tab.key
+                        ? colors.primary
+                        : colors.textSecondary,
+                    fontWeight: activeTab === tab.key ? '600' : '400',
                   },
                 ]}
-                onPress={() => setActiveTab(tab.key)}
               >
-                <Text
-                  style={[
-                    styles.tabText,
-                    {
-                      color:
-                        activeTab === tab.key
-                          ? colors.primary
-                          : colors.textSecondary,
-                      fontWeight: activeTab === tab.key ? '600' : '400',
-                    },
-                  ]}
-                >
-                  {tab.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {renderContent()}
+                {tab.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
-      </PageLayout>
-    </AuthGuard>
+
+        {renderContent()}
+      </View>
+    </PageLayout>
   );
 }
 
