@@ -1,5 +1,6 @@
 import { useTheme } from "@/hooks/themeHooks";
 import { useAuth } from "@/hooks/useAuth";
+import { scale, verticalScale } from "@/utils/scaling";
 import { Ionicons } from "@expo/vector-icons";
 import { usePathname, useRouter } from "expo-router";
 import React, { useEffect } from "react";
@@ -115,8 +116,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    paddingHorizontal: 16,
-    paddingTop: 10,
+    paddingHorizontal: scale(16),
+    paddingTop: verticalScale(10),
     borderTopWidth: 1,
     borderTopColor: "rgba(0, 0, 0, 0.1)",
   },
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 8,
+    paddingVertical: verticalScale(8),
   },
 });
 

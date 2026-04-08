@@ -1,5 +1,6 @@
 import { useTheme } from "@/hooks/themeHooks";
 import { useAuth } from "@/hooks/useAuth";
+import { moderateScale, scale, verticalScale } from "@/utils/scaling";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState, useEffect } from "react";
@@ -112,31 +113,31 @@ const Header = ({ onMenuPress }: HeaderProps) => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: 60,
+    height: verticalScale(60),
     backgroundColor: "transparent",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
+    paddingHorizontal: scale(16),
   },
   menuButton: {
-    padding: 8,
+    padding: scale(8),
   },
   rightSection: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: scale(12),
   },
   authButton: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
+    gap: scale(6),
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(8),
+    borderRadius: scale(8),
   },
   authButtonText: {
-    fontSize: 14,
+    fontSize: moderateScale(14),
     fontWeight: "600",
   },
 });
