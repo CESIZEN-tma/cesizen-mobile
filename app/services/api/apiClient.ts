@@ -146,29 +146,21 @@ async function fetchWithAuth(
 }
 
 export const apiClient = {
-  get: (endpoint: string) => {
-    return fetchWithAuth(`${API_BASE_URL}${endpoint}`, {
-      method: 'GET',
-    });
-  },
+  get: (endpoint: string) =>
+    fetchWithAuth(`${API_BASE_URL}${endpoint}`, { method: 'GET' }),
 
-  post: (endpoint: string, data?: any) => {
-    return fetchWithAuth(`${API_BASE_URL}${endpoint}`, {
+  post: (endpoint: string, data?: unknown) =>
+    fetchWithAuth(`${API_BASE_URL}${endpoint}`, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
-    });
-  },
+    }),
 
-  put: (endpoint: string, data?: any) => {
-    return fetchWithAuth(`${API_BASE_URL}${endpoint}`, {
+  put: (endpoint: string, data?: unknown) =>
+    fetchWithAuth(`${API_BASE_URL}${endpoint}`, {
       method: 'PUT',
       body: data ? JSON.stringify(data) : undefined,
-    });
-  },
+    }),
 
-  delete: (endpoint: string) => {
-    return fetchWithAuth(`${API_BASE_URL}${endpoint}`, {
-      method: 'DELETE',
-    });
-  },
+  delete: (endpoint: string) =>
+    fetchWithAuth(`${API_BASE_URL}${endpoint}`, { method: 'DELETE' }),
 };

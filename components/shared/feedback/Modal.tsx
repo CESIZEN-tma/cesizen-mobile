@@ -26,7 +26,7 @@ const Modal = ({
 }: ModalProps) => {
   const { colors } = useTheme();
 
-  const sizeStyles = {
+  const sizeStyles: Record<string, object> = {
     small: { width: "70%" },
     medium: { width: "85%" },
     large: { width: "95%" },

@@ -2,10 +2,10 @@ import { useTheme } from "@/hooks/themeHooks";
 import { scale, verticalScale } from "@/utils/scaling";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef } from "react";
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, DimensionValue, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type PressableButtonProps = {
-  width?: number | string;
+  width?: DimensionValue;
   height?: number;
   secondary?: boolean;
   label: string;

@@ -33,21 +33,21 @@ const mapBookmarkDtoToModel = (dto: BookmarkDTO): Bookmark => {
 
 export const configurationApi = {
   getAdminConfigurations: async (): Promise<Configuration[]> => {
-    const response = await apiClient.get<ConfigurationDTO[]>(
+    const response = await apiClient.get(
       ENDPOINTS.CONFIGURATIONS.GET_ALL
     );
     return response.map(mapConfigurationDtoToModel);
   },
 
   getMyConfigurations: async (): Promise<Configuration[]> => {
-    const response = await apiClient.get<ConfigurationDTO[]>(
+    const response = await apiClient.get(
       ENDPOINTS.USER_CONFIGURATIONS.GET_ALL
     );
     return response.map(mapConfigurationDtoToModel);
   },
 
   getConfigurationById: async (id: string): Promise<Configuration> => {
-    const response = await apiClient.get<ConfigurationDTO>(
+    const response = await apiClient.get(
       ENDPOINTS.USER_CONFIGURATIONS.GET_BY_ID(id)
     );
     return mapConfigurationDtoToModel(response);
@@ -56,7 +56,7 @@ export const configurationApi = {
   createConfiguration: async (
     data: CreateConfigurationRequestDTO
   ): Promise<Configuration> => {
-    const response = await apiClient.post<ConfigurationDTO>(
+    const response = await apiClient.post(
       ENDPOINTS.USER_CONFIGURATIONS.CREATE,
       data
     );
@@ -67,7 +67,7 @@ export const configurationApi = {
     id: string,
     data: UpdateConfigurationRequestDTO
   ): Promise<Configuration> => {
-    const response = await apiClient.put<ConfigurationDTO>(
+    const response = await apiClient.put(
       ENDPOINTS.USER_CONFIGURATIONS.UPDATE(id),
       data
     );
@@ -79,7 +79,7 @@ export const configurationApi = {
   },
 
   getBookmarks: async (): Promise<Bookmark[]> => {
-    const response = await apiClient.get<BookmarkDTO[]>(
+    const response = await apiClient.get(
       ENDPOINTS.BOOKMARKS.GET_ALL
     );
     return response.map(mapBookmarkDtoToModel);
@@ -87,7 +87,7 @@ export const configurationApi = {
 
   addBookmark: async (configurationId: string): Promise<Bookmark> => {
     const requestData: AddBookmarkRequestDTO = { configurationId };
-    const response = await apiClient.post<BookmarkDTO>(
+    const response = await apiClient.post(
       ENDPOINTS.BOOKMARKS.ADD,
       requestData
     );

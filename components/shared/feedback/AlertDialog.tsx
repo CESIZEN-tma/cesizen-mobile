@@ -6,7 +6,7 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
-import PressableButton from "./PressableButton";
+import PressableButton from "../PressButton";
 
 type AlertDialogProps = {
   visible: boolean;
